@@ -162,11 +162,10 @@ flowchart TD
 
 ### Prerequisites
 - **Node.js:** v18+ (v20+ recommended)
-- **Python:** v3.10+ (for Pygame desktop flight engine)
 
 ---
 
-### Option A: Launch the Web Expedition (Primary Platform)
+### Quick Start
 ```bash
 # 1. Clone repository
 git clone https://github.com/abdulalmahin24/Jr_AstroCamp.git
@@ -190,30 +189,33 @@ npm run build
 
 ---
 
-### Option B: Launch the Desktop Flight Simulator (Pygame)
-```bash
-# 1. Install Python dependencies
-pip install -r requirements.txt
-
-# 2. Run automated headless test suite
-python tests/test_game.py
-
-# 3. Launch 60 FPS Desktop Flight Simulator
-python main.py
-```
-
 ## 🔬 7. Verified NASA Science Data Attribution
 
-All scientific baselines in Jr_AstroCamp cite verified, publicly accessible NASA technical publications:
+All scientific baselines, telemetry models, and archival imagery in Jr_AstroCamp cite verified, publicly accessible NASA and space science sources:
 
-| Domain | NASA Technical Publication / Dataset | Direct Source URL | Game Mechanics Application |
-| :--- | :--- | :--- | :--- |
-| **Life Support (ECLSS)** | *Baseline Values and Assumptions Document (BVAD)* (NASA/TP-2015-218570) | [NASA NTRS](https://ntrs.nasa.gov/citations/20150002905) | Daily crew metabolic consumption: 0.84 kg O2, 2.50 kg water, 0.62 kg dry food per crew-day. |
-| **Lunar Lighting & Topography** | *Lunar Reconnaissance Orbiter (LRO) LOLA Science Team* | [LRO LOLA](https://lola.gsfc.nasa.gov/) | Shackleton crater rim polar lighting (>80% solar illumination) vs permanent shadow cold traps (<40 K). |
-| **Fission Surface Power** | *Kilopower Reactor Using Stirling Technology (KRUSTY)* (NASA Glenn / LANL) | [NASA STMD Kilopower](https://www.nasa.gov/directorates/stmd/game-changing-development-program/kilopower/) | Continuous 10 kWe / 25 kW baseline fission power independent of lunar night or solar dust occlusion. |
-| **Cosmic Radiation** | *Cosmic Ray Telescope for the Effects of Radiation (CRaTER)* | [LRO CRaTER](https://crater.unh.edu/) | Deep-space GCR exposure rates (0.5 mSv/day) and 1.5m sintered regolith shielding attenuation. |
-| **Martian Atmosphere** | *Curiosity Rover Rover Environmental Monitoring Station (REMS)* | [NASA JPL MSL REMS](https://mars.nasa.gov/msl/spacecraft/instruments/rems/) | Thin surface pressure (610 Pa), diurnal thermal swings, and atmospheric dust opacity ($\tau$). |
-| **Historical Flight Archive** | *NASA Master Catalog & National Space Science Data Center* | [NASA NSSDC](https://nssdc.gsfc.nasa.gov/) | 76 authentic historical mission flight parameters across Mercury, Apollo, Skylab, Shuttle, and Artemis. |
+### NASA Data
+
+| Dataset / Publication | Direct Source URL | Game & Learning Mechanics Application |
+| :--- | :--- | :--- |
+| **Astronomy Picture of the Day (APOD)** | [NASA APOD API](https://api.nasa.gov/planetary/apod) | In the NASA Live Observatory panel, it fills the daily-image card with the image, title, date, copyright credit, and explanation, and opens high-res URLs (bundled fallback on network failure). |
+| **Near Earth Object Web Service (NeoWs)** | [NASA NeoWs API](https://api.nasa.gov/neo/rest/v1/feed) | The Near-Earth Asteroid Radar lists up to 6 objects from today’s feed (name, diameter, hazardous flag, approach date, miss distance, relative speed; sample records used if offline). |
+| **NASA Image and Video Library** | [NASA Images](https://images.nasa.gov/) | The NASA Image Library modal sends search queries to the API and renders up to 24 matching records with metadata and thumbnails, allowing students to apply selections as scene backgrounds. |
+| **Apollo Passive Seismic Experiment (PSE)** | [WUSTL PDS PSE Archive](https://pds-geosciences.wustl.edu/missions/apollo/pse.htm) | A bundled JSON list of moonquake dates, coordinates, and magnitudes is plotted on the 3D Moonquake Map with year filtering; generates magnitude-based seismograph visualizations. |
+| **NASA NSSDC Master Catalog** | [NASA NSSDC](https://nssdc.gsfc.nasa.gov/nmc/) | Curated 76-mission catalog across Mercury, Gemini, Apollo, Skylab, Shuttle, and Artemis. A TypeScript catalog powers the Learning Hub with program/status filters, objectives, and operational guides. |
+| **Life Support (ECLSS) — NASA BVAD** | [NASA NTRS (NASA/TP-2015-218570)](https://ntrs.nasa.gov/citations/20150002905) | In the lunar/Mars outpost simulation, crew oxygen (0.84 kg/day), water (2.50 kg/day), and food (0.62 kg/day) needs inform resource depletion and recycling trade-offs (modeled as deterministic per-turn percentages). |
+| **Mars Surface Weather — MSL REMS & Perseverance MEDA** | [MSL REMS Archive](https://pds-atmospheres.nmsu.edu/data_and_services/atmospheres_data/MARS/curiosity/rems.html) / [Perseverance MEDA](https://science.nasa.gov/mission/mars-2020-perseverance/science-instruments/) | Provides baseline Martian atmospheric pressure (~610 Pa), diurnal surface thermal ranges, and atmospheric dust opacity ($\tau$) for the fixed Mars-weather sample in the NASA Live Observatory. |
+| **Lunar Lighting & Topography — LRO LOLA** | [LRO LOLA Archive](https://pds-geosciences.wustl.edu/missions/lro/lola.htm) | Referenced for lunar elevation, polar terrain, and Shackleton crater rim polar lighting (>80% solar illumination) vs permanently shadowed cold traps (<40 K) in the rover and outpost scenarios. |
+| **Lunar Water Ice — LCROSS Results** | [NASA LCROSS Mission](https://science.nasa.gov/mission/lcross/) | Informs the rover’s polar volatile water-ice core drill sampling scenarios in permanently shadowed craters. |
+| **Space Weather & Solar Storms — NASA DONKI** | [NASA DONKI](https://kauai.ccmc.gsfc.nasa.gov/DONKI/) | Informs the solar particle event (SPE) and space weather alert scenarios (event timing and dose values are scripted game inputs). |
+| **Cosmic Radiation — LRO CRaTER** | [LRO CRaTER](https://crater.unh.edu/) | Reference for deep-space galactic cosmic radiation (GCR) exposure rates (0.5 mSv/day) and 1.5m sintered regolith storm vault shielding attenuation. |
+| **Mars Topography — MGS MOLA** | [MGS MOLA Archive](https://pds-geosciences.wustl.edu/missions/mgs/mola.html) | Cited for Martian elevation reference models and outpost landing-site topography (Jezero Crater). |
+| **Fission Surface Power — Kilopower KRUSTY** | [NASA NTRS KRUSTY](https://ntrs.nasa.gov/search?q=KRUSTY) | Grounds the outpost’s Kilopower nuclear option in the NASA/LANL Stirling technology test program (continuous 10 kWe / 25 kW baseline fission power independent of lunar night or dust storms). |
+
+### Other Space Agency Data
+- **None:** The project does not currently ingest a separate ESA, JAXA, CSA, or ISRO dataset.
+
+### Other Datasets
+- **[Where the ISS at API](https://api.wheretheiss.at/v1/satellites/25544):** The NASA Live Observatory retrieves live ISS coordinates (latitude, longitude, altitude, velocity) from this third-party tracking endpoint, refreshing telemetry every 15 seconds.
 
 *For complete data tables, stoichiometry, and units, see [docs/SCIENCE_AND_DATA_SOURCES.md](./docs/SCIENCE_AND_DATA_SOURCES.md).*
 
@@ -223,8 +225,7 @@ All scientific baselines in Jr_AstroCamp cite verified, publicly accessible NASA
 
 Jr_AstroCamp includes comprehensive automated test suites:
 - **`npm test`**: Runs `tests/test_simulation.mjs` verifying initial state, mass budget capping, day/night transitions, Kilopower night generation, shift actions, battery failure detection, victory conditions, and resource clamping (8/8 pass).
-- **`npm run build`**: Runs `tsc -b` and `vite build` verifying zero TypeScript type errors across 1,935 modules.
-- **`python tests/test_game.py`**: Headless automated test suite verifying 76 flight missions, procedural sound synthesis, 6 simulation scenes, and save progression (100% pass).
+- **`npm run build`**: Runs `tsc -b` and `vite build` verifying zero TypeScript type errors across modules.
 
 *For full testing logs and protocols, see [docs/TESTING.md](./docs/TESTING.md).*
 
