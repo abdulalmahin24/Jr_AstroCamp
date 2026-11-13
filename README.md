@@ -202,24 +202,7 @@ python tests/test_game.py
 python main.py
 ```
 
----
-
-## ⏱️ 7. 3-to-5 Minute Demonstration Walkthrough Script
-
-Follow this script to demonstrate Jr_AstroCamp to competition judges in under 5 minutes:
-
-| Time | Step / Feature | Screen / Action | Talking Point |
-| :---: | :--- | :--- | :--- |
-| **0:00 - 0:45** | **Introduction & Mission Vision** | Main Menu (`LandingPage.tsx`) | *"Welcome to Jr_AstroCamp: Beyond Earth. Built for the 2026 NASA Space Apps Challenge, this is a real playable educational space simulator. Notice our core philosophy: Train, Build, Survive, Explore."* |
-| **0:45 - 1:30** | **Astronaut Academy** | Click **"Astronaut Academy"** | *"Before commanding a base, cadets train across 8 ASCAN modules grounded in NASA protocols—from Sabatier chemistry to lunar regolith radiation shielding, complete with interactive mini-widgets and quizzes."* |
-| **1:30 - 2:30** | **Outpost Cargo Budgeting** | Click **"Start Mission"** -> Cargo Allocator | *"Unlike casual games with infinite resources, here we face a real 45,000 kg rocket cargo budget. If I choose high-end nuclear reactors and heavy domes, my budget overflows and locks the launch. Every system requires real trade-offs."* |
-| **2:30 - 3:30** | **Mission Control & Lunar Night** | Confirm launch -> Sol 1 Mission Control | *"Now at Sol 1. Our simulation engine models authentic NASA BVAD human metabolic consumption. During the 354-hour lunar night, solar generation drops to zero. Cadets must manage battery reserves and shift actions to survive."* |
-| **3:30 - 4:15** | **Rover EVA Minigame** | Click **"ROVER EVA"** button | *"Cadets can deploy the surface rover into permanently shadowed craters. Using radar guidance and battery management, we drive over hazards, drill cryogenic ice cores, and return science points to base."* |
-| **4:15 - 5:00** | **NASA Science Data & Debrief** | Click **"NASA Data"** -> View Debrief | *"Every single simulation value is labeled either [REAL NASA DATA] or [GAME SIMULATION VALUE], citing official documents like BVAD and LOLA. The Mission Autopsy provides an Explainable AI root-cause analysis showing why decisions succeeded or failed."* |
-
----
-
-## 🔬 8. Verified NASA Science Data Attribution
+## 🔬 7. Verified NASA Science Data Attribution
 
 All scientific baselines in Jr_AstroCamp cite verified, publicly accessible NASA technical publications:
 
@@ -236,7 +219,7 @@ All scientific baselines in Jr_AstroCamp cite verified, publicly accessible NASA
 
 ---
 
-## 🧪 9. Automated Testing & Verification
+## 🧪 8. Automated Testing & Verification
 
 Jr_AstroCamp includes comprehensive automated test suites:
 - **`npm test`**: Runs `tests/test_simulation.mjs` verifying initial state, mass budget capping, day/night transitions, Kilopower night generation, shift actions, battery failure detection, victory conditions, and resource clamping (8/8 pass).
@@ -247,7 +230,7 @@ Jr_AstroCamp includes comprehensive automated test suites:
 
 ---
 
-## 🎨 10. Asset Credits & Licensing
+## 🎨 9. Asset Credits & Licensing
 
 - **3D Spacecraft & Suit Models:** Official NASA 3D Resources ([NASA 3D Resources](https://nasa3d.arc.nasa.gov/)) — ACES suit, Lunar Module, Astronaut, Dish Antenna, Gateway Core. Public domain under NASA Media Usage Guidelines.
 - **Iconography:** Lucide Icons (ISC License).
@@ -256,7 +239,7 @@ Jr_AstroCamp includes comprehensive automated test suites:
 
 ---
 
-## ⚠️ 11. Known Limitations & Compatibility
+## ⚠️ 10. Known Limitations & Compatibility
 
 - **Device Support:** Fully responsive across desktop, laptop, Chromebook, tablet, and mobile.
 - **3D Graphics Fallback:** A toggle in Settings (`SettingsModal.tsx`) switches between WebGL Three.js rendering and an optimized 2D schematic HUD for ultra-low-power student laptops.
