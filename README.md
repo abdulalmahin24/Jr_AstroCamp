@@ -44,19 +44,33 @@ The project features a **unified dual-engine architecture**:
 
 ---
 
-## 👥 2. Team Mysterio & Roles
+## 👥 2. Team Mysterio
 
-| Role | Name / Placeholder | Key Contribution |
-| :--- | :--- | :--- |
-| **Full-Stack & Systems Engineer** | *[Team Member Name]* | Web expedition architecture, simulation engine, state machine, and test runner |
-| **Game & Simulation Developer** | *[Team Member Name]* | Pygame 60 FPS flight engine, rover canvas physics, and 3D lunar rendering |
-| **Aerospace Data Researcher** | *[Team Member Name]* | BVAD life-support stoichiometry, LOLA topography, and Kilopower reactor integration |
-| **UI/UX & Instructional Designer** | *[Team Member Name]* | Astronaut Academy curriculum, comic storyboards, audio synthesis, and HUD design |
-| **QA & Verification Engineer** | *[Team Member Name]* | Automated unit tests, deterministic simulation assertions, and cross-platform verification |
+| Role | Responsibility |
+| :--- | :--- |
+| 🤖 AI Automation Engineer | Data ingestion pipelines & automated catalog content delivery |
+| 📊 Data Scientist | 76 NASA mission datasets, realistic telemetry & trajectory physics |
+| 🧠 ML Engineer | Explainable AI debriefs & root-cause failure analysis |
+| 💻 Full-Stack Developer | Pygame desktop simulator & React/TypeScript companion web portal |
+| 🔭 Researcher | Historical NASA flight accuracy, telemetry grounding & STEM alignment |
+| 🎨 UI/UX Designer | Immersive space aesthetic, HUD interfaces, comic storyboards & sound design |
 
 ---
 
-## 🎮 3. Complete Feature Tour
+## 🎯 3. The Core Philosophy: "Four Doors Into Every Concept"
+
+Traditional STEM content either oversimplifies real engineering into cartoons or drowns young learners in dense technical jargon. Worse, single-format tools leave diverse classrooms behind.
+
+Jr_AstroCamp solves this with **Four Doors**:
+
+1. 🎮 **Play & Simulate**: Real 60 FPS flight physics across 6 mission disciplines.
+2. 📖 **Visual Story Comics**: Dynamic panels narrating real crew triumphs and historical challenges.
+3. 📢 **Audio Lessons**: CapCom radio briefings and synthesized audio logs for listening anywhere.
+4. 📓 **Handwritten Notebooks**: Digital mission journals for students who learn through writing and hypothesis logging.
+
+---
+
+## 🎮 4. Complete Feature Tour
 
 ### 🎓 1. Astronaut Academy (8 Interactive ASCAN Modules)
 A guided, interactive astronaut training sequence aligned with NASA human exploration protocols:
@@ -105,7 +119,7 @@ Cadets are allocated a strict launch mass limit on the heavy-lift booster:
 
 ---
 
-## 🛠️ 4. Architecture & Technology Stack
+## 🛠️ 5. Architecture & Technology Stack
 
 ```mermaid
 flowchart TD
@@ -144,7 +158,7 @@ flowchart TD
 
 ---
 
-## 🚀 5. Installation & Quick Start
+## 🚀 6. Installation & Quick Start
 
 ### Prerequisites
 - **Node.js:** v18+ (v20+ recommended)
@@ -155,7 +169,7 @@ flowchart TD
 ### Option A: Launch the Web Expedition (Primary Platform)
 ```bash
 # 1. Clone repository
-git clone https://github.com/meetmehedi/Jr_AstroCamp.git
+git clone https://github.com/abdulalmahin24/Jr_AstroCamp.git
 cd Jr_AstroCamp
 
 # 2. Install Node dependencies
@@ -190,7 +204,7 @@ python main.py
 
 ---
 
-## ⏱️ 6. 3-to-5 Minute Demonstration Walkthrough Script
+## ⏱️ 7. 3-to-5 Minute Demonstration Walkthrough Script
 
 Follow this script to demonstrate Jr_AstroCamp to competition judges in under 5 minutes:
 
@@ -205,7 +219,7 @@ Follow this script to demonstrate Jr_AstroCamp to competition judges in under 5 
 
 ---
 
-## 🔬 7. Verified NASA Science Data Attribution
+## 🔬 8. Verified NASA Science Data Attribution
 
 All scientific baselines in Jr_AstroCamp cite verified, publicly accessible NASA technical publications:
 
@@ -222,7 +236,7 @@ All scientific baselines in Jr_AstroCamp cite verified, publicly accessible NASA
 
 ---
 
-## 🧪 8. Automated Testing & Verification
+## 🧪 9. Automated Testing & Verification
 
 Jr_AstroCamp includes comprehensive automated test suites:
 - **`npm test`**: Runs `tests/test_simulation.mjs` verifying initial state, mass budget capping, day/night transitions, Kilopower night generation, shift actions, battery failure detection, victory conditions, and resource clamping (8/8 pass).
@@ -233,7 +247,7 @@ Jr_AstroCamp includes comprehensive automated test suites:
 
 ---
 
-## 🎨 9. Asset Credits & Licensing
+## 🎨 10. Asset Credits & Licensing
 
 - **3D Spacecraft & Suit Models:** Official NASA 3D Resources ([NASA 3D Resources](https://nasa3d.arc.nasa.gov/)) — ACES suit, Lunar Module, Astronaut, Dish Antenna, Gateway Core. Public domain under NASA Media Usage Guidelines.
 - **Iconography:** Lucide Icons (ISC License).
@@ -242,7 +256,7 @@ Jr_AstroCamp includes comprehensive automated test suites:
 
 ---
 
-## ⚠️ 10. Known Limitations & Compatibility
+## ⚠️ 11. Known Limitations & Compatibility
 
 - **Device Support:** Fully responsive across desktop, laptop, Chromebook, tablet, and mobile.
 - **3D Graphics Fallback:** A toggle in Settings (`SettingsModal.tsx`) switches between WebGL Three.js rendering and an optimized 2D schematic HUD for ultra-low-power student laptops.
