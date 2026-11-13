@@ -248,4 +248,50 @@ Jr_AstroCamp includes comprehensive automated test suites:
 
 ---
 
+## 🤖 11. Use of Artificial Intelligence
+
+In accordance with NASA Space Apps Challenge regulations, all AI tools and their applications are disclosed below:
+
+- **Antigravity (AI coding assistant):** Used during development of the Outpost Command simulation for life-support calculations and TypeScript code scaffolding. Data it worked on: the project’s source code and NASA BVAD reference values (NASA/TP-2015-218570). The team checked the resulting values against the BVAD source.
+- **GitHub Copilot:** Used for code and documentation updates, debugging, source attribution, and test/build checks. Data it worked on: the project repository, the curated mission content, and public NASA reference pages. It did not process live APOD or NeoWs responses.
+- **CapCom AI (in-app assistant):** This is not an external AI service. It is a local, rule-based response system and sends no data to any AI model.
+
+---
+
+## 📚 12. References
+
+### NASA APIs & Data
+- **Astronomy Picture of the Day (APOD API):** [https://api.nasa.gov/planetary/apod](https://api.nasa.gov/planetary/apod)
+- **Near Earth Object Web Service (NeoWs):** [https://api.nasa.gov/neo/rest/v1/feed](https://api.nasa.gov/neo/rest/v1/feed)
+- **NASA Image and Video Library:** [https://images.nasa.gov/](https://images.nasa.gov/)
+- **Apollo Passive Seismic Experiment archive:** [https://pds-geosciences.wustl.edu/missions/apollo/pse.htm](https://pds-geosciences.wustl.edu/missions/apollo/pse.htm)
+- **NASA NSSDC Master Catalog:** [https://nssdc.gsfc.nasa.gov/nmc/](https://nssdc.gsfc.nasa.gov/nmc/)
+- **NASA BVAD report (NASA/TP-2015-218570):** [https://ntrs.nasa.gov/citations/20150002905](https://ntrs.nasa.gov/citations/20150002905)
+- **LRO LOLA archive:** [https://pds-geosciences.wustl.edu/missions/lro/lola.htm](https://pds-geosciences.wustl.edu/missions/lro/lola.htm)
+- **LCROSS mission results:** [https://science.nasa.gov/mission/lcross/](https://science.nasa.gov/mission/lcross/)
+- **NASA DONKI:** [https://kauai.ccmc.gsfc.nasa.gov/DONKI/](https://kauai.ccmc.gsfc.nasa.gov/DONKI/)
+- **LRO CRaTER:** [https://crater.unh.edu/](https://crater.unh.edu/)
+- **MSL REMS archive:** [https://pds-atmospheres.nmsu.edu/data_and_services/atmospheres_data/MARS/curiosity/rems.html](https://pds-atmospheres.nmsu.edu/data_and_services/atmospheres_data/MARS/curiosity/rems.html)
+- **Perseverance MEDA instrument information:** [https://science.nasa.gov/mission/mars-2020-perseverance/science-instruments/](https://science.nasa.gov/mission/mars-2020-perseverance/science-instruments/)
+- **MGS MOLA archive:** [https://pds-geosciences.wustl.edu/missions/mgs/mola.html](https://pds-geosciences.wustl.edu/missions/mgs/mola.html)
+- **NASA KRUSTY technical reports:** [https://ntrs.nasa.gov/search?q=KRUSTY](https://ntrs.nasa.gov/search?q=KRUSTY)
+
+### Other API (Third-Party, Not NASA)
+- **Where the ISS at:** [https://api.wheretheiss.at/v1/satellites/25544](https://api.wheretheiss.at/v1/satellites/25544)
+
+### Libraries & Frameworks
+- **React:** [https://react.dev/](https://react.dev/)
+- **TypeScript:** [https://www.typescriptlang.org/](https://www.typescriptlang.org/)
+- **Vite:** [https://vite.dev/](https://vite.dev/)
+- **Three.js:** [https://threejs.org/](https://threejs.org/)
+- **Pygame-ce:** [https://pyga.me/](https://pyga.me/)
+- **NumPy:** [https://numpy.org/](https://numpy.org/)
+- **Lucide icons:** [https://lucide.dev/](https://lucide.dev/)
+- **canvas-confetti:** [https://github.com/catdad/canvas-confetti](https://github.com/catdad/canvas-confetti)
+
+### Assets
+- Bundled NASA imagery and educational video embeds, with credits kept in the app’s `nasaCitation` and `nasaGovUrl` fields. Detailed per-source usage notes are in [NASA_DATA_ATTRIBUTION.md](./NASA_DATA_ATTRIBUTION.md) in the repository.
+
+---
+
 *(c) 2026 Team Mysterio · Jr_AstroCamp: Beyond Earth · NASA Space Apps Challenge 2026*

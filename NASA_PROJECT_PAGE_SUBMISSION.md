@@ -77,10 +77,9 @@ Jr_AstroCamp is an ed-tech aerospace simulation platform built for students aged
 
 ## 5. Use of Artificial Intelligence (Mandatory Space Apps Disclosure)
 In accordance with NASA Space Apps Challenge regulations, all AI tools and their applications are disclosed below:
-1. **Code Assistance & Refactoring (Antigravity IDE / Claude 3.5 Sonnet / Gemini 3.8):** Used for TypeScript type-guard generation, Three.js shader optimization, and lint refactoring.
-2. **Procedural Radio Audio Synthesis:** Web Audio API algorithms generating procedural radio static, NASA Quindar bleeps (2475 Hz / 250 ms), and telemetry chimes.
-3. **Explainable AI Root-Cause Autopsy Engine:** Deterministic rule-based causal tree generator that traces back telemetry state histories (e.g. `Low Battery -> ECLSS Heater Disabled -> Habitat Freezes -> Mission Lost`) to provide plain-language debrief recommendations.
-*Note: All core aerospace physics formulas, BVAD stoichiometric equations, orbital flight dynamics, and catalog entries were manually derived and verified from official NASA publications.*
+- **Antigravity (AI coding assistant):** Used during development of the Outpost Command simulation for life-support calculations and TypeScript code scaffolding. Data it worked on: the project’s source code and NASA BVAD reference values (NASA/TP-2015-218570). The team checked the resulting values against the BVAD source.
+- **GitHub Copilot:** Used for code and documentation updates, debugging, source attribution, and test/build checks. Data it worked on: the project repository, the curated mission content, and public NASA reference pages. It did not process live APOD or NeoWs responses.
+- **CapCom AI (in-app assistant):** This is not an external AI service. It is a local, rule-based response system and sends no data to any AI model.
 
 ---
 
