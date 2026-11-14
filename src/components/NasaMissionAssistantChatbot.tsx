@@ -1,32 +1,27 @@
 // ============================================================
 // NASA Jr_AstroCamp — AI Mission Assistant Copilot (Chatbot)
-// Forked and enhanced from NASA Space Apps 2026 Extended Version
+// Unified Knowledge Base Search (Idea 1) + Live Telemetry & Page Context (Idea 2)
 // Grounded in NASA Flight Transcripts, BVAD Stoichiometry, and Orbital Physics
 // ============================================================
 
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Bot,
-  Radio,
   Send,
   X,
   Volume2,
-  VolumeX,
   Sparkles,
-  HelpCircle,
-  Zap,
-  RotateCcw,
-  Minimize2,
   Maximize2,
-  Compass,
-  Layers,
-  ChevronDown,
+  Minimize2,
   MessageCircle,
 } from 'lucide-react';
 import { soundFx } from '../utils/audioEffects';
 import { speechEngine } from '../utils/speechEngine';
 import type { User } from '../types/auth';
-import { getStudentMentorReply, type StudentMentorContext } from '../utils/studentMentor';
+import {
+  getMissionAssistantResponse,
+  getContextualQuickPrompts,
+  type StudentMentorContext,
+} from '../utils/studentMentor';
 
 export interface ChatMessage {
   id: string;
@@ -48,138 +43,6 @@ interface NasaMissionAssistantChatbotProps {
   floatingOffsetBottom?: number;
 }
 
-// Preset Quick Inquiry Prompts for middle school cadets (Student Mentor Persona)
-const SUGGESTED_MENTOR_PROMPTS = [
-  'Can you help me with this mission?',
-  'Why do astronauts need power?',
-  'What if I make a mistake?',
-  'Where does this data come from?',
-  'What about radiation?',
-  'Surviving the 14-day lunar night',
-];
-
-// Preset Quick Inquiry Prompts for technical aerospace inquiries (CapCom Copilot Persona)
-const SUGGESTED_COPILOT_PROMPTS = [
-  '🚀 What is the 7 Minutes of Terror in EDL?',
-  '💧 Explain ECLSS closed-loop water & air math',
-  '🛰️ What are Quindar tones and orbital velocity?',
-  '🪐 Tell me about Europa Clipper & ocean worlds',
-  '🛸 How to perform orbital docking?',
-  '⚛️ Explain Kilopower KRUSTY nuclear reactor',
-];
-
-// Knowledge base rules & response generator grounded in authentic NASA open science
-function generateCopilotResponse(query: string): { reply: string; citations: string[] } {
-  const q = query.toLowerCase();
-
-  if (q.includes('lunar night') || q.includes('moon night') || q.includes('night') && q.includes('moon')) {
-    return {
-      reply: `Commander, on the Moon, a single night lasts ~14 Earth days (354 hours) with temperatures dropping to -208°C (-342°F). During this cryogenic blackout, solar panels generate 0 kW. To survive:
-1. Deploy a **Kilopower KRUSTY 10 kWe nuclear Stirling fission reactor** to maintain continuous baseload power without sunlight.
-2. Store thermal heat in sintered regolith thermal mass vaults.
-3. Conserve ECLSS battery reserves by lowering habitability loads to critical life-support heaters.`,
-      citations: ['NASA STMD Kilopower KRUSTY Report', 'NASA LRO Diviner Thermal Telemetry']
-    };
-  }
-
-  if (q.includes('moxie') || (q.includes('oxygen') && q.includes('mars'))) {
-    return {
-      reply: `Affirmative, Cadet! MOXIE (Mars Oxygen ISRU Experiment) aboard the Perseverance rover generates breathable O2 directly from the thin Martian atmosphere (95% CO2).
-Using Solid Oxide Electrolysis at ~800°C:
-$$2\\text{CO}_2 \\rightarrow 2\\text{CO} + \\text{O}_2$$
-MOXIE produces up to 10–12 grams of pure oxygen per hour. A human astronaut consumes ~0.84 kg O2 per day (~35 grams/hour), proving that future human crews can produce their breathing air and rocket oxidizer locally on Mars!`,
-      citations: ['NASA JPL Mars 2020 MOXIE Technical Briefing', 'NASA BVAD TP-2015-218570']
-    };
-  }
-
-  if (q.includes('7 minutes') || q.includes('terror') || q.includes('edl') || (q.includes('landing') && q.includes('mars'))) {
-    return {
-      reply: `The **"7 Minutes of Terror"** refers to the Entry, Descent, and Landing (EDL) sequence of landing a rover on Mars. 
-Because Martian radio transmissions take 7 to 14 minutes to reach Earth, Mission Control cannot pilot it live—the spacecraft must land 100% autonomously!
-1. **Hypersonic Entry**: Enters atmosphere at ~20,000 km/h (12,500 mph). Heat shield withstands 1,300°C.
-2. **Supersonic Parachute**: Deploys at Mach 1.7 to bleed off 90% of kinetic energy.
-3. **Terrain Relative Navigation (TRN)**: Rover scans ground topography to avoid boulder fields.
-4. **Sky Crane Maneuver**: Rocket thrusters brake the descent stage, lowering the rover on nylon tethers to touch down safely.`,
-      citations: ['NASA JPL EDL Autonomous Flight Log', 'Curiosity & Perseverance EDL Architecture']
-    };
-  }
-
-  if (q.includes('eclss') || q.includes('water') || q.includes('stoichiometry') || q.includes('life support')) {
-    return {
-      reply: `Under NASA Baseline Values and Assumptions Document (BVAD TP-2015-218570), human metabolic life support requirements are calculated per astronaut per day:
-- **Oxygen**: $0.84\\text{ kg } \\text{O}_2$ consumed / day.
-- **Hydration & Food Prep**: $2.50\\text{ kg } \\text{H}_2\\text{O}$ / day.
-- **Dry Calorie Biomass**: $0.62\\text{ kg food}$ (~2,500 kcal).
-
-ECLSS recycles moisture via:
-1. **Urine Processor Assembly (UPA)**: Vacuum rotary distillation recovering 98% of moisture.
-2. **Sabatier Catalytic Reactor**:
-$$\\text{CO}_2 + 4\\text{H}_2 \\rightarrow \\text{CH}_4 + 2\\text{H}_2\\text{O}$$
-The water produced is electrolyzed into fresh breathing oxygen!`,
-      citations: ['NASA BVAD (TP-2015-218570)', 'ISS ECLSS Environmental Control Logs']
-    };
-  }
-
-  if (q.includes('quindar') || q.includes('beep') || q.includes('frequency')) {
-    return {
-      reply: `CapCom here! **Quindar tones** are the iconic dual-frequency beeps heard during Apollo and early shuttle transmissions.
-- **Intro Beep**: 2,525 Hz (duration ~250 ms) triggered the ground transmitter station when CapCom pressed Push-To-Talk (PTT).
-- **Outro Beep**: 2,475 Hz signaled the remote antenna transmitter to shut down when CapCom released PTT.
-This automated the remote line keying between Houston Mission Control and the Deep Space Network (DSN) stations in Goldstone, Madrid, and Canberra.`,
-      citations: ['NASA Apollo Telecommunications Manual', 'NASA History Technical Monograph']
-    };
-  }
-
-  if (q.includes('europa') || q.includes('ocean') || q.includes('clipper') || q.includes('deep space')) {
-    return {
-      reply: `Cadet, Jupiter's icy moon **Europa** harbors a subsurface saltwater ocean beneath a 15–25 km ice shell that holds more than twice the liquid water of all Earth's oceans combined!
-The **Europa Clipper** mission (launched October 2024) will perform 49 low-altitude flybys as close as 25 km above the ice.
-Equipped with ice-penetrating radar (REASON), an infrared spectrometer, and an ice-dust analyzer, it is determining whether subsurface geothermal vents provide conditions for extraterrestrial life!`,
-      citations: ['NASA Europa Clipper Mission Science Plan', 'NASA Planetary Science Decadal Survey']
-    };
-  }
-
-  if (q.includes('orbit') || q.includes('speed') || q.includes('velocity') || q.includes('iss')) {
-    return {
-      reply: `To stay in Low Earth Orbit (LEO) at ~400 km altitude, a spacecraft must travel at orbital velocity:
-$$v = \\sqrt{\\frac{GM}{r}} \\approx 7.8\\text{ km/s} \\quad (28,000\\text{ km/h or } 17,500\\text{ mph})$$
-At this velocity, the Earth's curvature falls away beneath the vehicle at the exact same rate gravity pulls it downward, putting astronauts in perpetual continuous freefall (microgravity). The ISS orbits Earth once every 92 minutes—experiencing 16 sunrises and sunsets every 24 hours!`,
-      citations: ['NASA Orbital Mechanics Course Handbook', 'JPL Horizon Ephemeris Calculations']
-    };
-  }
-
-  if (q.includes('radiation') || q.includes('shielding') || q.includes('gcr') || q.includes('spe')) {
-    return {
-      reply: `Beyond Earth's protective magnetosphere and thick atmosphere, astronauts face two deadly radiation hazards:
-1. **Galactic Cosmic Rays (GCR)**: High-energy relativistic protons and iron nuclei originating outside our solar system.
-2. **Solar Particle Events (SPE)**: Giant coronal mass ejections blasting millions of tons of ionized plasma.
-
-**NASA Countermeasures**:
-- **Sintered Regolith Storm Vault**: Piling 1.5–2 meters of molten lunar soil over habitat modules absorbs ionizing cosmic rays.
-- **Hydrogen-Rich Shielding**: Water walls and polyethylene food storage blocks secondary neutron radiation far better than heavy lead.`,
-      citations: ['NASA CRaTER Instrument on LRO', 'NASA Space Radiation Health Project (SRHP)']
-    };
-  }
-
-  if (q.includes('docking') || q.includes('dock') || q.includes('simulator') || q.includes('rcs')) {
-    return {
-      reply: `Pilot Tip: During orbital docking:
-1. Never burn main engines close to the target! Use short, pulsed Reaction Control System (RCS) translation thrusters.
-2. Keep your relative closing rate below $0.1\\text{ m/s}$ ($0.36\\text{ km/h}$) at contact.
-3. Align crosshairs on the docking target reticle to zero out angular pitch and yaw before latching contact!`,
-      citations: ['NASA International Docking System Standard (IDSS)', 'Gemini VIII & Apollo Rendezvous Logs']
-    };
-  }
-
-  // Fallback intelligent aerospace copilot answer
-  return {
-    reply: `Commander, telemetry is clear. Regarding "${query}":
-In NASA mission operations, every choice is governed by strict trade-offs between mass, power, safety margins, and scientific yield. Whether budgeting cargo limits on the Space Launch System (SLS) or managing life-support stoichiometry on the Moon or Mars, redundancy and safety (ALARA principles) ensure our crew returns safely.
-Feel free to ask about orbital maneuvers, Kilopower reactors, Mars MOXIE oxygen generation, ECLSS life support math, or guidance on any of our 76 missions!`,
-    citations: ['NASA International Space Apps Challenge 2026', 'Team Mysterio Operational Guide']
-  };
-}
-
 export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotProps> = ({
   currentUser,
   isOpen: externalIsOpen,
@@ -192,7 +55,7 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
 }) => {
   const [internalIsOpen, setInternalIsOpen] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
+  const [soundEnabled] = useState<boolean>(true);
   const [mentorMode, setMentorMode] = useState<'mentor' | 'copilot'>(initialMode);
   const [inputQuery, setInputQuery] = useState<string>('');
   const [isThinking, setIsThinking] = useState<boolean>(false);
@@ -205,7 +68,7 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
       id: 'msg-init-1',
       sender: 'assistant',
       senderName: 'Mission Mentor',
-      text: "Hi, Cadet! I’m your Mission Mentor. You don’t have to figure everything out alone—we can take one question at a time. What would you like help with?",
+      text: "Hi, Cadet! I’m your Mission Mentor. Ask me about your active mission, any of the 76 NASA flights, astronauts, spacesuits, ECLSS math, or how to use the simulators!",
       timestamp: '00:00:01',
       citations: ['NASA Space Apps Student Mentor Framework', 'NASA DONKI Space Weather Database', 'NASA BVAD TP-2015-218570']
     }
@@ -241,44 +104,16 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
     setInputQuery('');
     setIsThinking(true);
 
-    // Realistic radio response delay (400ms)
     setTimeout(() => {
-      let reply: string;
-      let citations: string[];
-
-      const q = query.toLowerCase();
-      // If in mentor mode OR the query matches key mentor scenarios (choices, worry, radiation, data origin)
-      if (
-        mentorMode === 'mentor' ||
-        q.includes('choose') ||
-        q.includes('decide') ||
-        q.includes('which option') ||
-        q.includes('help me') ||
-        q.includes('worried') ||
-        q.includes('stuck') ||
-        q.includes('scared') ||
-        q.includes('radiation') ||
-        q.includes('where does this data come from') ||
-        q.includes('attribution')
-      ) {
-        reply = getStudentMentorReply(query, mentorContext);
-        citations = ['NASA DONKI Space Weather Database', 'NASA BVAD TP-2015-218570'];
-        if (mentorContext?.activeEvent?.dataAttribution?.sourceUrl) {
-          citations.push(mentorContext.activeEvent.dataAttribution.sourceUrl);
-        }
-      } else {
-        const copilotRes = generateCopilotResponse(query);
-        reply = copilotRes.reply;
-        citations = copilotRes.citations;
-      }
+      const result = getMissionAssistantResponse(query, mentorContext);
 
       const assistantMsg: ChatMessage = {
         id: `ai-${Date.now()}`,
         sender: 'assistant',
         senderName: mentorMode === 'mentor' ? 'NASA Cadet Mentor' : 'CapCom AI Copilot',
-        text: reply,
+        text: result.reply,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-        citations
+        citations: result.citations,
       };
 
       setMessages((prev) => [...prev, assistantMsg]);
@@ -287,12 +122,11 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
       if (soundEnabled) {
         soundFx.playDsnChirp();
       }
-    }, 400);
+    }, 300);
   };
 
   const handleSpeakMessage = (text: string) => {
     speechEngine.stop();
-    // Strip markdown formatting for cleaner TTS
     const plainText = text.replace(/[*#$]/g, '').replace(/\\text\{([^}]+)\}/g, '$1');
     speechEngine.speak(plainText, 'SYSTEM_AI');
   };
@@ -310,11 +144,17 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
     }
   };
 
-  const activePrompts = mentorMode === 'mentor' ? SUGGESTED_MENTOR_PROMPTS : SUGGESTED_COPILOT_PROMPTS;
+  const activePrompts = getContextualQuickPrompts(mentorContext, mentorMode);
+  const res = mentorContext?.resources;
+  const hasLowResource =
+    res !== undefined &&
+    ((res.power !== undefined && res.power < 45) ||
+      (res.oxygen !== undefined && res.oxygen < 45) ||
+      (res.water !== undefined && res.water < 45));
 
   return (
     <>
-      {/* Floating Launcher Widget (You're not on this mission alone. + Ask your mentor) */}
+      {/* Floating Launcher Widget */}
       {floatingMode && !isOpen && (
         <div
           className="copilot-floating-trigger-btn mentor-floating-widget"
@@ -331,14 +171,15 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
             transition: 'bottom 0.25s ease',
           }}
         >
-          {/* Supportive Speech Bubble */}
           <div
             style={{
               padding: '7px 18px',
               borderRadius: '9999px',
               background: 'rgba(11, 20, 42, 0.94)',
-              border: '1.5px solid rgba(56, 189, 248, 0.35)',
-              color: '#f8fafc',
+              border: hasLowResource
+                ? '1.5px solid rgba(251, 146, 60, 0.7)'
+                : '1.5px solid rgba(56, 189, 248, 0.35)',
+              color: hasLowResource ? '#fdba74' : '#f8fafc',
               fontSize: '13.5px',
               fontWeight: 500,
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.65)',
@@ -349,10 +190,11 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
               animation: 'fadeInUp 0.3s ease-out',
             }}
           >
-            You’re not on this mission alone.
+            {hasLowResource
+              ? `⚠️ Sol ${mentorContext?.currentSol ?? 1} Telemetry Alert — Ask Mentor`
+              : 'You’re not on this mission alone.'}
           </div>
 
-          {/* Action Pill Button */}
           <button
             onClick={handleToggleOpen}
             aria-label="Ask your mentor"
@@ -389,7 +231,7 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
         </div>
       )}
 
-      {/* Main Chatbot Panel Dialog (Mission Mentor Interface) */}
+      {/* Main Chatbot Panel Dialog */}
       {isOpen && (
         <div
           className="copilot-chatbot-window"
@@ -416,70 +258,133 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
           {/* Header */}
           <div
             style={{
-              padding: '18px 22px 14px 22px',
+              padding: '16px 20px 12px 20px',
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '12px',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+              flexDirection: 'column',
+              gap: '10px',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div
-                style={{
-                  width: '42px',
-                  height: '42px',
-                  borderRadius: '50%',
-                  background: 'rgba(6, 182, 212, 0.14)',
-                  border: '1.5px solid rgba(34, 211, 238, 0.45)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#22d3ee',
-                  boxShadow: '0 0 16px rgba(34, 211, 238, 0.25)',
-                  flexShrink: 0,
-                }}
-              >
-                <Sparkles size={20} style={{ strokeWidth: 2 }} />
-              </div>
-              <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div
                   style={{
-                    fontSize: '18px',
-                    fontWeight: 700,
-                    color: '#ffffff',
-                    lineHeight: 1.2,
-                    letterSpacing: '-0.01em',
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    background: 'rgba(6, 182, 212, 0.14)',
+                    border: '1.5px solid rgba(34, 211, 238, 0.45)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#22d3ee',
+                    boxShadow: '0 0 16px rgba(34, 211, 238, 0.25)',
+                    flexShrink: 0,
                   }}
                 >
-                  Mission Mentor
+                  <Sparkles size={19} style={{ strokeWidth: 2 }} />
                 </div>
-                <div style={{ fontSize: '13px', color: '#94a3b8', marginTop: '2px' }}>
-                  Your friendly in-app guide
+                <div>
+                  <div
+                    style={{
+                      fontSize: '17px',
+                      fontWeight: 700,
+                      color: '#ffffff',
+                      lineHeight: 1.2,
+                      letterSpacing: '-0.01em',
+                    }}
+                  >
+                    Mission Mentor
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
+                    {mentorMode === 'mentor' ? 'Cadet Mentor • 76-Mission Index' : 'CapCom Technical Copilot'}
+                  </div>
                 </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <button
+                  onClick={() => setMentorMode((m) => (m === 'mentor' ? 'copilot' : 'mentor'))}
+                  style={{
+                    padding: '4px 10px',
+                    borderRadius: '999px',
+                    background: mentorMode === 'copilot' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(15, 23, 42, 0.8)',
+                    border: '1px solid rgba(56, 189, 248, 0.35)',
+                    color: '#38bdf8',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                  title="Switch between Cadet Mentor and Technical CapCom prompt suggestions"
+                >
+                  {mentorMode === 'mentor' ? '🎓 Mentor' : '🛰️ CapCom'}
+                </button>
+                <button
+                  onClick={() => setIsExpanded((v) => !v)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#94a3b8',
+                    cursor: 'pointer',
+                    padding: '5px',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                  title={isExpanded ? 'Compact size' : 'Expand window'}
+                >
+                  {isExpanded ? <Minimize2 size={17} /> : <Maximize2 size={17} />}
+                </button>
+                <button
+                  onClick={handleToggleOpen}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#94a3b8',
+                    cursor: 'pointer',
+                    padding: '5px',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                  title="Close Mission Mentor"
+                >
+                  <X size={21} />
+                </button>
               </div>
             </div>
 
-            <button
-              onClick={handleToggleOpen}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#94a3b8',
-                cursor: 'pointer',
-                padding: '6px',
-                borderRadius: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'color 0.15s ease',
-              }}
-              title="Close Mission Mentor"
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#94a3b8')}
-            >
-              <X size={22} />
-            </button>
+            {/* Live Outpost Telemetry Strip (Idea 2) */}
+            {res && (
+              <button
+                onClick={() => handleSendMessage('Diagnose my low outpost resources!')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '8px',
+                  padding: '6px 12px',
+                  borderRadius: '10px',
+                  background: hasLowResource ? 'rgba(124, 45, 18, 0.35)' : 'rgba(15, 23, 42, 0.75)',
+                  border: hasLowResource
+                    ? '1px solid rgba(251, 146, 60, 0.5)'
+                    : '1px solid rgba(56, 189, 248, 0.18)',
+                  color: '#cbd5e1',
+                  fontSize: '11.5px',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+                title="Click for live outpost telemetry diagnostic"
+              >
+                <span>
+                  {mentorContext?.destination === 'MARS' ? '🔴 MARS' : '🌕 MOON'} • Sol {mentorContext?.currentSol ?? 1}
+                </span>
+                <span>
+                  ⚡{Math.round(res.power ?? 0)}% • 🫁{Math.round(res.oxygen ?? 0)}% • 💧{Math.round(res.water ?? 0)}%
+                </span>
+              </button>
+            )}
           </div>
 
           {/* Messages Stream */}
@@ -539,7 +444,7 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
                       fontFamily: 'var(--font-mono, monospace)',
                     }}
                   >
-                    MISSION MENTOR
+                    {msg.senderName || 'MISSION MENTOR'}
                   </div>
                   <div
                     style={{
@@ -552,7 +457,33 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
                     {msg.text}
                   </div>
 
-                  {/* Speech Narration Button */}
+                  {msg.citations && msg.citations.length > 0 && (
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: '6px',
+                        marginTop: '10px',
+                      }}
+                    >
+                      {msg.citations.map((cit, i) => (
+                        <span
+                          key={i}
+                          style={{
+                            fontSize: '10.5px',
+                            padding: '2px 8px',
+                            borderRadius: '999px',
+                            background: 'rgba(15, 23, 42, 0.85)',
+                            border: '1px solid rgba(56, 189, 248, 0.25)',
+                            color: '#7dd3fc',
+                          }}
+                        >
+                          📎 {cit}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
                   <button
                     onClick={() => handleSpeakMessage(msg.text)}
                     style={{
@@ -576,21 +507,23 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
               );
             })}
 
-            {/* Quick Prompt Pills matching the screenshot layout */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '6px' }}>
-              <div>
+            {/* Context-Aware Quick Prompt Pills (Idea 2) */}
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '6px' }}>
+              {activePrompts.map((promptText) => (
                 <button
-                  onClick={() => handleSendMessage('Can you help me with this mission?')}
+                  key={promptText}
+                  onClick={() => handleSendMessage(promptText)}
                   style={{
-                    padding: '8px 16px',
+                    padding: '7px 14px',
                     borderRadius: '9999px',
                     background: 'rgba(11, 25, 45, 0.85)',
                     border: '1px solid rgba(56, 189, 248, 0.3)',
                     color: '#e2e8f0',
-                    fontSize: '13.5px',
+                    fontSize: '13px',
                     fontWeight: 500,
                     cursor: 'pointer',
                     transition: 'all 0.18s ease',
+                    textAlign: 'left',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = '#38bdf8';
@@ -603,65 +536,9 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
                     e.currentTarget.style.color = '#e2e8f0';
                   }}
                 >
-                  Can you help me with this mission?
+                  {promptText}
                 </button>
-              </div>
-
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                <button
-                  onClick={() => handleSendMessage('Why do astronauts need power?')}
-                  style={{
-                    padding: '8px 16px',
-                    borderRadius: '9999px',
-                    background: 'rgba(11, 25, 45, 0.85)',
-                    border: '1px solid rgba(56, 189, 248, 0.3)',
-                    color: '#e2e8f0',
-                    fontSize: '13.5px',
-                    fontWeight: 500,
-                    cursor: 'pointer',
-                    transition: 'all 0.18s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#38bdf8';
-                    e.currentTarget.style.background = 'rgba(14, 38, 70, 0.95)';
-                    e.currentTarget.style.color = '#ffffff';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.3)';
-                    e.currentTarget.style.background = 'rgba(11, 25, 45, 0.85)';
-                    e.currentTarget.style.color = '#e2e8f0';
-                  }}
-                >
-                  Why do astronauts need power?
-                </button>
-
-                <button
-                  onClick={() => handleSendMessage('What if I make a mistake?')}
-                  style={{
-                    padding: '8px 16px',
-                    borderRadius: '9999px',
-                    background: 'rgba(11, 25, 45, 0.85)',
-                    border: '1px solid rgba(56, 189, 248, 0.3)',
-                    color: '#e2e8f0',
-                    fontSize: '13.5px',
-                    fontWeight: 500,
-                    cursor: 'pointer',
-                    transition: 'all 0.18s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#38bdf8';
-                    e.currentTarget.style.background = 'rgba(14, 38, 70, 0.95)';
-                    e.currentTarget.style.color = '#ffffff';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.3)';
-                    e.currentTarget.style.background = 'rgba(11, 25, 45, 0.85)';
-                    e.currentTarget.style.color = '#e2e8f0';
-                  }}
-                >
-                  What if I make a mistake?
-                </button>
-              </div>
+              ))}
             </div>
 
             {/* Thinking / Uplink indicator */}
@@ -689,7 +566,7 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
                     animation: 'pulse 1s infinite',
                   }}
                 />
-                <span>Consulting mission logs...</span>
+                <span>Searching Jr_AstroCamp knowledge base...</span>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -731,7 +608,7 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
                   type="text"
                   value={inputQuery}
                   onChange={(e) => setInputQuery(e.target.value)}
-                  placeholder="It's okay to ask for help..."
+                  placeholder="Ask about missions, astronauts, simulators, or your outpost..."
                   style={{
                     flex: 1,
                     background: 'transparent',
@@ -781,7 +658,7 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
                 lineHeight: 1.4,
               }}
             >
-              A learning guide, not a live person. Answers use prepared learning content.
+              A learning guide, not a live person. Grounded in Jr_AstroCamp’s 76 NASA missions & curriculum data.
             </div>
           </div>
         </div>
@@ -791,4 +668,3 @@ export const NasaMissionAssistantChatbot: React.FC<NasaMissionAssistantChatbotPr
 };
 
 export default NasaMissionAssistantChatbot;
-

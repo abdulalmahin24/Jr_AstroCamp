@@ -35,12 +35,14 @@ export interface ScienceModule {
   nasaMissionsList: string[];
 }
 
+const BASE_URL = (import.meta as { env?: { BASE_URL?: string } }).env?.BASE_URL ?? '/';
+
 export const SPACE_DISCOVERY_MODULES: ScienceModule[] = [
   {
     id: 'earth-systems',
     title: 'Planet Earth: The Dynamic Water World',
     subtitle: 'The Goldilocks Zone, Atmospheric Shields & Human Home',
-    heroImage: `${import.meta.env.BASE_URL}assets/planets/earth.png`,
+    heroImage: `${BASE_URL}assets/planets/earth.png`,
     category: 'PLANET',
     telemetry: {
       distanceFromSun: '149.6 Million km (1.0 AU)',
@@ -93,7 +95,7 @@ export const SPACE_DISCOVERY_MODULES: ScienceModule[] = [
     id: 'lunar-gateway',
     title: 'The Moon: Artemis Gateway to the Cosmos',
     subtitle: 'Peaks of Eternal Light, Shackleton Ice & Deep Space Hangar',
-    heroImage: `${import.meta.env.BASE_URL}assets/planets/moon.png`,
+    heroImage: `${BASE_URL}assets/planets/moon.png`,
     category: 'MOON',
     telemetry: {
       distanceFromSun: '149.6 Million km (~384,400 km from Earth)',
@@ -146,7 +148,7 @@ export const SPACE_DISCOVERY_MODULES: ScienceModule[] = [
     id: 'mars-frontier',
     title: 'Mars: The Red Planet & Jezero Ancient River',
     subtitle: 'Search for Ancient Life, Thin Skies & MOXIE Oxygen',
-    heroImage: `${import.meta.env.BASE_URL}assets/planets/mars.png`,
+    heroImage: `${BASE_URL}assets/planets/mars.png`,
     category: 'PLANET',
     telemetry: {
       distanceFromSun: '227.9 Million km (1.52 AU)',
@@ -199,7 +201,7 @@ export const SPACE_DISCOVERY_MODULES: ScienceModule[] = [
     id: 'deep-space-frontier',
     title: 'The Cosmic Frontier: Outer Giants & Space Telescopes',
     subtitle: 'Gravitational Slingshots, Ocean Moons & Webb Infrared Eyes',
-    heroImage: `${import.meta.env.BASE_URL}assets/planets/jupiter.png`,
+    heroImage: `${BASE_URL}assets/planets/jupiter.png`,
     category: 'DEEP_SPACE',
     telemetry: {
       distanceFromSun: '778.5 Million km to 5.9 Billion km (5.2 to 39.5 AU)',

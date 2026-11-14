@@ -201,6 +201,8 @@ export const INITIAL_ACADEMY_FACILITIES: AcademyFacility[] = [
   },
 ];
 
+const BASE_URL = (import.meta as { env?: { BASE_URL?: string } }).env?.BASE_URL ?? '/';
+
 export const EQUIPMENT_CATALOG: EquipmentItem[] = [
   {
     id: 'item-emu-suit',
@@ -218,7 +220,7 @@ export const EQUIPMENT_CATALOG: EquipmentItem[] = [
     },
     nasaFact: 'First flown in 1982 on STS-4; has supported over 200 spacewalks on the Space Shuttle and International Space Station.',
     icon: '🧑‍🚀',
-    modelPath: `${import.meta.env.BASE_URL}models/EMU_Suit.glb`,
+    modelPath: `${BASE_URL}models/EMU_Suit.glb`,
     modelScale: 1.8,
     equipped: true,
   },
@@ -238,7 +240,7 @@ export const EQUIPMENT_CATALOG: EquipmentItem[] = [
     },
     nasaFact: 'Nicknamed the "Pumpkin Suit", ACES protected Shuttle crews from 1994 to 2011 and laid the foundation for the Artemis Orion OCSS suit.',
     icon: '🧡',
-    modelPath: `${import.meta.env.BASE_URL}models/ACES_Suit.glb`,
+    modelPath: `${BASE_URL}models/ACES_Suit.glb`,
     modelScale: 1.8,
     equipped: false,
   },
@@ -258,7 +260,7 @@ export const EQUIPMENT_CATALOG: EquipmentItem[] = [
     },
     nasaFact: 'Designed by Grumman; safely carried 12 humans to the lunar surface between 1969 and 1972 with zero fatal flight accidents.',
     icon: '🛸',
-    modelPath: `${import.meta.env.BASE_URL}models/Apollo_Lunar_Module.glb`,
+    modelPath: `${BASE_URL}models/Apollo_Lunar_Module.glb`,
     modelScale: 0.9,
     equipped: true,
   },
@@ -278,7 +280,7 @@ export const EQUIPMENT_CATALOG: EquipmentItem[] = [
     },
     nasaFact: 'Landed in Jezero Crater in February 2021; also carried the Ingenuity helicopter, the first powered aircraft on an alien planet.',
     icon: '🚜',
-    modelPath: `${import.meta.env.BASE_URL}models/Mars_Perseverance_Rover.glb`,
+    modelPath: `${BASE_URL}models/Mars_Perseverance_Rover.glb`,
     modelScale: 0.8,
     equipped: false,
   },
@@ -298,7 +300,7 @@ export const EQUIPMENT_CATALOG: EquipmentItem[] = [
     },
     nasaFact: 'Tested at the Desert RATS analog campaigns in Arizona to evaluate crew ergonomics and dust mitigation protocols.',
     icon: '🏠',
-    modelPath: `${import.meta.env.BASE_URL}models/Habitat_Unit.glb`,
+    modelPath: `${BASE_URL}models/Habitat_Unit.glb`,
     modelScale: 1.0,
     equipped: true,
   },
@@ -318,7 +320,7 @@ export const EQUIPMENT_CATALOG: EquipmentItem[] = [
     },
     nasaFact: 'Essential for lunar south pole outposts where continuous microgrid power must bridge localized terrain shadows.',
     icon: '⚡',
-    modelPath: `${import.meta.env.BASE_URL}models/Base_Station.glb`,
+    modelPath: `${BASE_URL}models/Base_Station.glb`,
     modelScale: 1.2,
     equipped: false,
   },
@@ -338,7 +340,7 @@ export const EQUIPMENT_CATALOG: EquipmentItem[] = [
     },
     nasaFact: 'NASA 70m dishes in California, Spain, and Australia are the only antennas on Earth capable of tracking Voyager 1 past 24 billion km.',
     icon: '📡',
-    modelPath: `${import.meta.env.BASE_URL}models/Dish_70m.glb`,
+    modelPath: `${BASE_URL}models/Dish_70m.glb`,
     modelScale: 0.6,
     equipped: false,
   },

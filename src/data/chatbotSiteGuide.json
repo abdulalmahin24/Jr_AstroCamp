@@ -1,0 +1,100 @@
+[
+  {
+    "id": "site-overview",
+    "title": "About Jr_AstroCamp & Team Mysterio",
+    "keywords": ["what is jr_astrocamp", "about this website", "what is this website", "what is this app", "team mysterio", "space apps", "overview", "features"],
+    "reply": "**Jr_AstroCamp: Beyond Earth** (built by **Team Mysterio** for the **NASA International Space Apps Challenge 2026**) is an interactive aerospace flight simulator and multi-format STEM learning platform.\n\nHere is what you can explore on this website:\n• **Mission Control (`#mission`)**: Command a 30-Sol Moon (Shackleton Crater) or Mars (Jezero Crater) outpost balancing Oxygen, Power, Water, Food, and Radiation.\n• **76-Mission Campaign (`#campaign`)**: Fly 76 authentic NASA missions from Project Mercury and Apollo 11 to Artemis III, Perseverance, and James Webb.\n• **Simulators Hub (`#simulators`)**: Hands-on 3D & 2D simulators including Rocket Launch, Orbital Docking, Lunar Landing, Mars EDL, Rover Exploration, Black Hole Physics, and 3D Spacesuits.\n• **Learning Hub (`#learning`)**: 8-issue STEM Graphic Novel Comics, Audio & Video Lessons, Handwritten Cadet Notebooks, Flashcards, and Quizzes.\n• **Astronaut Academy (`#academy`)**: Upgrade NASA training facilities (NBL Pool, 20G Centrifuge), inspect 3D spacecraft, and unlock real astronaut characters.\n• **Teacher Hub (`#teacher`)**: NGSS-aligned classroom gradebook, student analytics, and printable Flight Certificates.",
+    "citations": ["NASA International Space Apps Challenge 2026", "Team Mysterio Operational Guide"]
+  },
+  {
+    "id": "site-how-to-play",
+    "title": "How to Play & Win the Outpost Simulation",
+    "keywords": ["how to play", "rules", "how to win", "build points", "sols", "outpost", "game rules", "tutorial", "beginner", "start"],
+    "reply": "**How to Play the Outpost Survival Simulation:**\n\n1. **Pick Your Destination & Tier**: Choose the **Moon (Shackleton Crater)** or **Mars (Jezero Crater)** and select one of 5 difficulty tiers (*Explorer, Cadet, Engineer, Scientist, Commander*).\n2. **Spend Build Points (BP)**: Use your starting BP in the Outpost Construction panel to build Solar Arrays, Kilopower Reactors, Hydroponic Greenhouses, or Regolith Shielding.\n3. **Survive 30 Sols**: Each Sol presents a real NASA telemetry event (solar storms, moonquakes, dust storms, or ECLSS leaks). Compare the resource deltas (`Power`, `Oxygen`, `Water`, `Food`, `Radiation`, `Science`) before picking an option.\n4. **Victory Condition**: Keep **Oxygen, Power, Water, and Crew Health above 0%** through Sol 30 while completing your primary science objectives!",
+    "citations": ["Jr_AstroCamp Gameplay Guide", "NASA BVAD TP-2015-218570"]
+  },
+  {
+    "id": "site-simulators",
+    "title": "Simulators Hub & 3D Flight Trainers",
+    "keywords": ["simulators", "3d simulator", "flight simulator", "games", "mini games", "launch simulator", "rover simulator", "lunar landing", "moonbase alpha", "hardcore survival"],
+    "reply": "**Simulators Hub (`#simulators`)** gives you direct hands-on control of 9 interactive aerospace trainers:\n\n1. **Rocket Launch & Staging**: Manage throttle, Max-Q aerodynamic stress, and two-stage booster separation.\n2. **Orbital Rendezvous & Docking**: Pulse RCS translation thrusters to dock with the ISS/Agena at $< 0.1\\text{ m/s}$.\n3. **Apollo Lunar Landing**: Pilot the Lunar Module over boulder fields before descent propellant runs dry.\n4. **Mars EDL (7 Minutes of Terror)**: Survive hypersonic entry ($1,300^\\circ\\text{C}$), parachute deploy, and Sky Crane touchdown.\n5. **Planetary Rover Exploration**: Drive Perseverance across Jezero Crater to drill core samples.\n6. **Deep Space Telescope (JWST)**: Align 18 gold hexagonal mirror segments at the L2 Lagrange point.\n7. **Black Hole Gravitational Lab**: Visualize event horizons, photon spheres, and relativistic accretion disks.\n8. **3D Spacesuit & Spacecraft Viewer**: Inspect NASA's xEMU, ACES Pumpkin Suit, Apollo LM, and Perseverance in 360° 3D.\n9. **Hardcore Survival & Moonbase Alpha**: Repair life-support loops under real-time solar storm and moonquake emergencies.",
+    "citations": ["Jr_AstroCamp Simulators Hub", "NASA Flight Training Curriculum"]
+  },
+  {
+    "id": "site-learning-comics",
+    "title": "Learning Hub: Comics, Audio, Video & Notebook",
+    "keywords": ["comics", "comic book", "graphic novel", "notebook", "audio lesson", "video lesson", "flashcards", "quiz", "quizzes", "learning hub", "study"],
+    "reply": "In the **Learning Hub (`#learning`)**, every spaceflight topic is taught in 5 interactive formats:\n\n• **STEM Graphic Novels (8 Issues)**: Illustrated comic books featuring Cadet Maya & Commander Dadu tackling rocket staging, lunar ice, ECLSS recycling, solar storms, Mars EDL, and JWST.\n• **Handwritten Cadet Notebook**: Interactive fill-in-the-blank field notes, force diagrams, and vocabulary.\n• **Audio & Video Briefings**: CapCom voice transcripts and step-by-step NASA mission animations.\n• **Audio Teaching Flashcards**: Collectible STEM cards that adapt explanations across 5 age/difficulty levels (*Explorer* to *Commander*).\n• **Flight Readiness Quizzes**: Earn coins and academic points by passing module quizzes!",
+    "citations": ["Jr_AstroCamp Companion Curriculum", "NASA Space Place Educational Standards"]
+  },
+  {
+    "id": "site-academy",
+    "title": "Astronaut Academy, Gear Shop & Crew Roster",
+    "keywords": ["astronaut academy", "upgrade", "facilities", "shop", "equipment", "coins", "ranks", "characters", "astronauts", "crew", "certificate"],
+    "reply": "The **Astronaut Academy (`#academy`)** lets you train your crew and upgrade hardware:\n\n• **NASA Training Facilities**: Upgrade the *20G High-G Centrifuge*, *Neutral Buoyancy Spacewalk Tank (NBL)*, *Sintered Regolith Radiation Vault*, and *Houston Mission Control Bridge* for permanent mission bonuses.\n• **Aerospace Equipment Locker**: Equip the *xEMU Suit*, *ACES Suit*, *Apollo Lunar Module*, *Perseverance Rover*, *Kilopower Reactor*, and *Sabatier Unit* and inspect their 3D GLB models.\n• **Historic & Artemis Astronaut Roster**: Unlock and fly with real astronauts including **Neil Armstrong, Kalpana Chawla, Sally Ride, Buzz Aldrin, Christina Koch, Victor Glover, Peggy Whitson, and Chris Hadfield**.\n• **Flight Certificate**: Download your personalized, verifiable NASA Cadet Flight Certificate from the top navigation bar!",
+    "citations": ["NASA Johnson Space Center Training Division", "Jr_AstroCamp Astronaut Academy"]
+  },
+  {
+    "id": "site-teacher-multiplayer",
+    "title": "Teacher Hub & Co-Op Multiplayer Mode",
+    "keywords": ["teacher", "gradebook", "classroom", "ngss", "multiplayer", "coop", "co-op", "room code", "friends", "team", "judge mode"],
+    "reply": "**Classroom & Multiplayer Features:**\n\n• **Teacher Hub (`#teacher`)**: Provides educators with a live Student Gradebook, NGSS science standard mappings, quiz scores, and printable student dossiers.\n• **4-Player Co-Op Multiplayer**: Click Multiplayer in the navigation bar to create or join a room code! Up to 4 cadets split authentic NASA bridge roles:\n  1. **Commander (CDR)** — Final mission decisions & safety authority\n  2. **Flight Engineer (FE)** — Power grid, Kilopower & ECLSS hardware\n  3. **Payload Specialist (PS)** — Rovers, drills & ISRU water/oxygen\n  4. **Science Officer (SO)** — DONKI space weather & seismic telemetry",
+    "citations": ["NGSS STEM Education Framework", "NASA Crew Resource Management (CRM)"]
+  },
+  {
+    "id": "tech-lunar-night-kilopower",
+    "title": "Surviving the 14-Day Lunar Night & Kilopower KRUSTY",
+    "keywords": ["lunar night", "moon night", "14 day", "354 hours", "kilopower", "krusty", "nuclear reactor", "fission", "stirling"],
+    "reply": "On the Moon, a single night lasts **~14 Earth days (354 hours)** with temperatures plunging to **-208°C (-342°F)** in polar craters. During this cryogenic blackout, solar panels generate **0 kW**.\n\n**How NASA Survives Lunar Night:**\n1. **Kilopower KRUSTY Fission Reactor**: Uses an enriched Uranium-235 core with passive sodium heat pipes and Stirling engines to output a continuous **10 kWe** day and night for 10+ years.\n2. **Regolith Thermal Mass**: Sintered lunar soil vaults retain daytime heat.\n3. **ECLSS Load Shedding**: Non-essential science loads are throttled down so battery reserves keep habitat life-support heaters above freezing.",
+    "citations": ["NASA STMD Kilopower KRUSTY Report", "NASA LRO Diviner Thermal Telemetry"]
+  },
+  {
+    "id": "tech-moxie-mars-oxygen",
+    "title": "MOXIE: Making Breathable Oxygen on Mars",
+    "keywords": ["moxie", "mars oxygen", "isru", "breathe on mars", "carbon dioxide electrolysis", "solid oxide"],
+    "reply": "**MOXIE (Mars Oxygen ISRU Experiment)** aboard the Perseverance rover generates breathable $\\text{O}_2$ directly from the thin Martian atmosphere (which is 95.3% $\\text{CO}_2$).\n\nUsing **Solid Oxide Electrolysis** at $\\sim 800^\\circ\\text{C}$:\n$$2\\text{CO}_2 \\rightarrow 2\\text{CO} + \\text{O}_2$$\n• MOXIE produces up to **10–12 grams** of 99.6% pure oxygen per hour.\n• A human astronaut consumes **$0.84\\text{ kg } \\text{O}_2\\text{/day}$** (~35 g/hour), proving future Mars crews can manufacture both breathing air and liquid oxygen rocket propellant locally instead of hauling it from Earth!",
+    "citations": ["NASA JPL Mars 2020 MOXIE Technical Briefing", "NASA BVAD TP-2015-218570"]
+  },
+  {
+    "id": "tech-edl-7-minutes",
+    "title": "7 Minutes of Terror: Mars Entry, Descent & Landing (EDL)",
+    "keywords": ["7 minutes of terror", "seven minutes of terror", "edl", "entry descent landing", "sky crane", "mars landing", "heat shield", "parachute", "trn"],
+    "reply": "The **\"7 Minutes of Terror\"** is the autonomous Entry, Descent, and Landing (EDL) sequence on Mars. Because radio signals take 7 to 14 minutes one-way between Earth and Mars, the spacecraft must land **100% autonomously**:\n\n1. **Hypersonic Entry**: Hits the atmosphere at $\\sim 20,000\\text{ km/h}$ ($12,500\\text{ mph}$). The aeroshell heat shield withstands **$1,300^\\circ\\text{C}$** peak heating.\n2. **Supersonic Parachute**: Deploys at Mach 1.7 to bleed off 90% of remaining kinetic energy in Mars' thin $610\\text{ Pa}$ air.\n3. **Terrain-Relative Navigation (TRN)**: Onboard cameras map craters and boulders in real time to pick a safe landing zone.\n4. **Sky Crane Maneuver**: Descent hydrazine thrusters hover 20 meters above the ground and lower the rover on nylon bridles until wheel touchdown.",
+    "citations": ["NASA JPL EDL Autonomous Flight Log", "Curiosity & Perseverance EDL Architecture"]
+  },
+  {
+    "id": "tech-eclss-sabatier",
+    "title": "ECLSS Closed-Loop Water & Air Stoichiometry",
+    "keywords": ["eclss", "sabatier", "water recycling", "urine processor", "upa", "stoichiometry", "life support math", "bvad", "oxygen consumption", "breath to water"],
+    "reply": "Under the **NASA Baseline Values and Assumptions Document (BVAD TP-2015-218570)**, each astronaut requires per day:\n• **Oxygen ($\\text{O}_2$)**: $0.84\\text{ kg/day}$ (exhaling $1.00\\text{ kg } \\text{CO}_2\\text{/day}$)\n• **Potable Water ($\\text{H}_2\\text{O}$)**: $2.50\\text{–}3.00\\text{ L/day}$ (drinking, food prep & hygiene)\n• **Food Biomass**: $0.62\\text{ kg dry food/day}$ ($\\sim 2,500\\text{–}3,000\\text{ kcal}$)\n\n**How ECLSS Closes the Loop:**\n1. **Urine Processor Assembly (UPA)** & **Water Processor Assembly (WPA)**: Recover **98%** of cabin moisture from sweat and urine.\n2. **Sabatier Reactor ($400^\\circ\\text{C}$ nickel/ruthenium catalyst)**:\n$$\\text{CO}_2 + 4\\text{H}_2 \\rightarrow \\text{CH}_4 + 2\\text{H}_2\\text{O}$$\n3. **Oxygen Generation Assembly (OGA)**: Electrolyzes that recovered water ($2\\text{H}_2\\text{O} \\rightarrow 2\\text{H}_2 + \\text{O}_2$) back into breathable air!",
+    "citations": ["NASA BVAD (TP-2015-218570)", "ISS ECLSS Environmental Control Logs"]
+  },
+  {
+    "id": "tech-quindar-dsn",
+    "title": "Quindar Tones & the Deep Space Network (DSN)",
+    "keywords": ["quindar", "beep", "radio beep", "2525 hz", "2475 hz", "deep space network", "dsn", "goldstone", "madrid", "canberra", "capcom"],
+    "reply": "**Quindar Tones** are the iconic dual-frequency beeps heard on Apollo and Shuttle voice loops:\n• **Intro Tone ($2,525\\text{ Hz}$ for $250\\text{ ms}$)**: Triggered remote ground transmitters when CapCom pressed Push-To-Talk (PTT).\n• **Outro Tone ($2,475\\text{ Hz}$ for $250\\text{ ms}$)**: Keyed off the remote transmitter when CapCom released PTT.\n\nToday, NASA communicates across the solar system using the **Deep Space Network (DSN)**—three giant **70-meter parabolic dishes** spaced $120^\\circ$ apart around Earth in **Goldstone (California), Madrid (Spain), and Canberra (Australia)** so a spacecraft never loses line-of-sight as Earth rotates!",
+    "citations": ["NASA Apollo Telecommunications Manual", "NASA JPL Deep Space Network Monograph"]
+  },
+  {
+    "id": "tech-orbital-mechanics-docking",
+    "title": "Orbital Velocity, Microgravity & Docking",
+    "keywords": ["orbital velocity", "orbital speed", "7.8 km/s", "escape velocity", "11.2 km/s", "docking", "rcs", "rendezvous", "microgravity", "zero gravity", "freefall", "iss orbit"],
+    "reply": "**Orbital Mechanics & Rendezvous:**\n• **Low Earth Orbit (LEO) Velocity**: At $\\sim 400\\text{ km}$ altitude, a spacecraft must travel at:\n$$v = \\sqrt{\\frac{GM}{r}} \\approx 7.8\\text{ km/s} \\quad (28,000\\text{ km/h})$$\nAstronauts float in **microgravity** not because gravity is absent (gravity at the ISS is still ~90% of Earth's surface!), but because the station is in continuous sideways freefall around Earth's curve.\n• **Earth Escape Velocity**: $11.2\\text{ km/s}$ ($40,320\\text{ km/h}$) to break free for the Moon or Mars.\n• **Orbital Docking Rules**: Never fire main engines near the target. Use short **RCS (Reaction Control System)** pulses, align pitch/yaw crosshairs, and keep closing speed below **$0.1\\text{ m/s}$** at contact.",
+    "citations": ["NASA Orbital Mechanics Course Handbook", "NASA International Docking System Standard (IDSS)"]
+  },
+  {
+    "id": "tech-black-hole-gargantua",
+    "title": "Black Holes, Event Horizons & Time Dilation",
+    "keywords": ["black hole", "gargantua", "event horizon", "schwarzschild", "accretion disk", "spaghettification", "time dilation", "relativity", "gravitational lensing"],
+    "reply": "**Black Hole Astrophysics (Black Hole Simulator):**\n• **Event Horizon (Schwarzschild Radius)**: The boundary where escape velocity equals the speed of light ($c$):\n$$R_s = \\frac{2GM}{c^2}$$\n• **Photon Sphere ($1.5\\,R_s$)**: Gravity is so intense that light photons orbit the black hole in a ring, creating the relativistic gravitational lensing halo.\n• **Gravitational Time Dilation**: Under Einstein's General Relativity, clocks closer to a massive gravity well tick slower relative to distant observers.\n• **Tidal Forces (Spaghettification)**: Extreme gravity gradients stretch infalling matter vertically and compress it horizontally.",
+    "citations": ["NASA Goddard Black Hole Astrophysics Guide", "Event Horizon Telescope (EHT) M87* & Sgr A* Papers"]
+  },
+  {
+    "id": "tech-spacesuits",
+    "title": "NASA Spacesuits: EMU, xEMU & ACES",
+    "keywords": ["spacesuit", "suit", "xemu", "emu", "aces", "pumpkin suit", "spacewalk", "eva", "armstrong limit", "plss"],
+    "reply": "**Why Astronauts Need Pressurized Spacesuits:**\nAbove $19\\text{ km}$ altitude (**the Armstrong Limit**), atmospheric pressure drops so low ($< 6.3\\text{ kPa}$) that water and human saliva boil at normal body temperature ($37^\\circ\\text{C}$).\n\n• **ACES (\"Pumpkin Suit\")**: High-visibility orange launch/entry pressure suit with anti-G bladders and emergency parachutes.\n• **EMU / Artemis xEMU**: 14-layer miniature personal spacecraft pressurized to **$29.6\\text{ kPa}$ ($4.3\\text{ psi}$) pure $\\text{O}_2$**. Includes a **Liquid Cooling and Ventilation Garment (LCVG)** weaving 90 meters of water tubing against the skin, a gold-coated UV visor, Kevlar micrometeoroid weave, and an 8-hour **PLSS** life-support backpack.",
+    "citations": ["NASA Extravehicular Mobility Unit (EMU) Reference Manual", "NASA Artemis xEMU Engineering Specs"]
+  }
+]

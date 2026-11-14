@@ -999,6 +999,9 @@ export const App: React.FC = () => {
             currentSol: gameState.currentSol,
             isGameOver: gameState.isGameOver,
             resources: gameState.resources,
+            route,
+            currentMissionName: currentMission.name,
+            difficultyMode: gameState.difficultyMode,
           }}
         />
       </Suspense>
