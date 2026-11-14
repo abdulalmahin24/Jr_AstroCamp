@@ -3,7 +3,7 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/nasa2026_nehal-s_extended_version/',
+  base: '/Jr_AstroCamp/',
   plugins: [react()],
   server: {
     watch: {
