@@ -30,8 +30,13 @@ import {
   CheckCircle2,
   Calendar,
   Layers,
-  Zap
+  Zap,
+  Lock,
+  AlertTriangle
 } from 'lucide-react';
+import { NASA_SURVIVAL_DATA_PLAN } from '../data/nasaSurvivalDataPlan';
+import { HardcoreSurvivalSimulator } from './HardcoreSurvivalSimulator';
+import type { HardcoreMissionId } from '../missions/survivalMissions';
 import { speechEngine } from '../utils/speechEngine';
 import { HandwrittenNotebookView } from './HandwrittenNotebookView';
 import { AudioLessonPlayerView } from './AudioLessonPlayerView';
@@ -58,7 +63,7 @@ interface LearningHubModalProps {
   onOpenLeaderboard?: () => void;
 }
 
-export type HubTab = 'OR_GRAPH' | 'NOTEBOOK' | 'MODELS_3D' | 'VIDEO' | 'AUDIO' | 'COMIC' | 'BRIEFINGS' | 'CATALOG';
+export type HubTab = 'OR_GRAPH' | 'NOTEBOOK' | 'MODELS_3D' | 'VIDEO' | 'AUDIO' | 'COMIC' | 'BRIEFINGS' | 'CATALOG' | 'SURVIVAL_4';
 
 const SPEAKER_META: Record<string, { emoji: string; name: string; color: string }> = {
   CADET_MAYA:      { emoji: '👩‍🚀', name: 'Cadet Maya',        color: '#38bdf8' },
@@ -123,6 +128,11 @@ export const LearningHubModal: React.FC<LearningHubModalProps> = ({
   const [catalogSearch, setCatalogSearch] = useState('');
   const [selectedProgram, setSelectedProgram] = useState('ALL');
   const [selectedStatus, setSelectedStatus] = useState('ALL');
+  const [lockedSurvivalNotice, setLockedSurvivalNotice] = useState<string | null>(null);
+  const [activeSurvivalSimId, setActiveSurvivalSimId] = useState<HardcoreMissionId | null>(null);
+
+  const completedCount = completedMissions?.length ?? 0;
+  const isAll76Completed = completedCount >= 76;
 
 
   if (!isOpen && !isFullPage) return null;
@@ -135,7 +145,9 @@ export const LearningHubModal: React.FC<LearningHubModalProps> = ({
 
   const handleClose = () => {
     stopSpeech();
-    onClose();
+    if (!isFullPage) {
+      onClose();
+    }
   };
 
 
@@ -185,8 +197,9 @@ export const LearningHubModal: React.FC<LearningHubModalProps> = ({
     { id: 'VIDEO',     label: 'NASA Video Modules & 3D',   icon: Video },
     { id: 'AUDIO',     label: 'Audio Lessons',             icon: Mic },
     { id: 'COMIC',     label: 'Comic Reader',              icon: BookOpen },
-    { id: 'BRIEFINGS', label: 'Outpost Briefs',       icon: Radio },
-    { id: 'CATALOG',   label: 'NASA Missions (76)',   icon: Rocket },
+    { id: 'BRIEFINGS',  label: 'Outpost Briefs',       icon: Radio },
+    { id: 'CATALOG',    label: 'NASA Missions (76)',   icon: Rocket },
+    { id: 'SURVIVAL_4', label: '4 Survival Missions',  icon: Lock },
   ];
 
   const hubBody = (
@@ -814,6 +827,11 @@ export const LearningHubModal: React.FC<LearningHubModalProps> = ({
                 <div className="hub-catalog-grid">
                   {filteredCatalogMissions.map((m) => {
                     const isPlaying = speakingCatalogId === m.id;
+                    const globalIdx = NASA_MISSIONS_CATALOG.findIndex((item) => item.id === m.id);
+                    const prevMission = globalIdx > 0 ? NASA_MISSIONS_CATALOG[globalIdx - 1] : null;
+                    const isDone = Boolean(completedMissions?.includes(m.id));
+                    const isPriorCompleted = globalIdx <= 0 || Boolean(prevMission && completedMissions?.includes(prevMission.id));
+                    const isUnlocked = currentUser?.role === 'teacher' || isDone || isPriorCompleted;
                     const statusLower = m.status.toLowerCase();
                     const statusClass = statusLower.includes('active')
                       ? 'hub-catalog-status-active'
@@ -824,10 +842,39 @@ export const LearningHubModal: React.FC<LearningHubModalProps> = ({
                       : 'hub-catalog-status-completed';
 
                     return (
-                      <div key={m.id} className="hub-catalog-card">
+                      <div
+                        key={m.id}
+                        className="hub-catalog-card"
+                        style={{
+                          opacity: isUnlocked ? 1 : 0.65,
+                          border: isUnlocked && !isDone
+                            ? '1.5px solid rgba(56, 189, 248, 0.55)'
+                            : undefined,
+                        }}
+                      >
                         <div className="hub-catalog-card-header">
                           <span className="hub-catalog-id-badge">{m.id}</span>
-                          <span className={`hub-catalog-status-badge ${statusClass}`}>{m.status}</span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            {!isUnlocked && (
+                              <span
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '3px',
+                                  fontSize: '0.65rem',
+                                  fontWeight: 800,
+                                  color: '#94a3b8',
+                                  background: 'rgba(30, 41, 59, 0.7)',
+                                  border: '1px solid rgba(100, 116, 139, 0.4)',
+                                  borderRadius: '4px',
+                                  padding: '1px 6px',
+                                }}
+                              >
+                                <Lock size={10} /> LOCKED
+                              </span>
+                            )}
+                            <span className={`hub-catalog-status-badge ${statusClass}`}>{m.status}</span>
+                          </div>
                         </div>
 
                         <div className="hub-catalog-title">{m.name}</div>
@@ -864,7 +911,10 @@ export const LearningHubModal: React.FC<LearningHubModalProps> = ({
                         {onLaunchMission && (
                           <button
                             className="hub-catalog-play-game-btn"
+                            disabled={!isUnlocked}
+                            title={!isUnlocked && prevMission ? `Complete ${prevMission.id} (${prevMission.name}) first to unlock.` : undefined}
                             onClick={() => {
+                              if (!isUnlocked) return;
                               onLaunchMission(m.id);
                               handleClose();
                             }}
@@ -872,17 +922,21 @@ export const LearningHubModal: React.FC<LearningHubModalProps> = ({
                               marginTop: '8px',
                               width: '100%',
                               padding: '7px 12px',
-                              background: completedMissions?.includes(m.id)
-                                ? 'rgba(16, 185, 129, 0.2)'
-                                : 'linear-gradient(90deg, #06b6d4, #3b82f6)',
-                              border: completedMissions?.includes(m.id)
-                                ? '1px solid rgba(16, 185, 129, 0.4)'
-                                : 'none',
+                              background: !isUnlocked
+                                ? 'rgba(30, 41, 59, 0.7)'
+                                : isDone
+                                  ? 'rgba(16, 185, 129, 0.2)'
+                                  : 'linear-gradient(90deg, #06b6d4, #3b82f6)',
+                              border: !isUnlocked
+                                ? '1px solid rgba(100, 116, 139, 0.4)'
+                                : isDone
+                                  ? '1px solid rgba(16, 185, 129, 0.4)'
+                                  : 'none',
                               borderRadius: '6px',
-                              color: completedMissions?.includes(m.id) ? '#34d399' : '#020617',
+                              color: !isUnlocked ? '#94a3b8' : isDone ? '#34d399' : '#020617',
                               fontWeight: 700,
                               fontSize: '0.75rem',
-                              cursor: 'pointer',
+                              cursor: isUnlocked ? 'pointer' : 'not-allowed',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
@@ -890,12 +944,21 @@ export const LearningHubModal: React.FC<LearningHubModalProps> = ({
                               transition: 'all 0.2s',
                             }}
                           >
-                            <Play size={12} fill={completedMissions?.includes(m.id) ? 'none' : 'currentColor'} />
-                            <span>
-                              {completedMissions?.includes(m.id)
-                                ? 'Replay Mission Simulation ★'
-                                : 'Play Mission Simulator 🚀'}
-                            </span>
+                            {!isUnlocked ? (
+                              <>
+                                <Lock size={12} />
+                                <span>Locked — Beat #{globalIdx} ({prevMission?.id}) First</span>
+                              </>
+                            ) : (
+                              <>
+                                <Play size={12} fill={isDone ? 'none' : 'currentColor'} />
+                                <span>
+                                  {isDone
+                                    ? 'Replay Mission Simulation ★'
+                                    : 'Play Mission Simulator 🚀'}
+                                </span>
+                              </>
+                            )}
                           </button>
                         )}
                       </div>
@@ -903,6 +966,245 @@ export const LearningHubModal: React.FC<LearningHubModalProps> = ({
                   })}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* ── TAB 9: 4 SURVIVAL MISSIONS (LOCKED UNTIL ALL 76 MISSIONS COMPLETED) ── */}
+          {activeTab === 'SURVIVAL_4' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div
+                style={{
+                  background: 'linear-gradient(135deg, rgba(127, 29, 29, 0.25) 0%, rgba(15, 23, 42, 0.95) 100%)',
+                  border: isAll76Completed ? '1px solid rgba(16, 185, 129, 0.45)' : '1px solid rgba(239, 68, 68, 0.45)',
+                  borderRadius: '10px',
+                  padding: '16px 20px',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '12px',
+                }}
+              >
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                    <Lock size={16} style={{ color: isAll76Completed ? '#10b981' : '#f87171' }} />
+                    <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#f8fafc' }}>
+                      4 Extreme Planetary Survival Missions
+                    </span>
+                    <span
+                      style={{
+                        fontSize: '0.68rem',
+                        fontWeight: 800,
+                        padding: '2px 8px',
+                        borderRadius: '999px',
+                        background: isAll76Completed ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                        color: isAll76Completed ? '#34d399' : '#fca5a5',
+                        border: isAll76Completed ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(239, 68, 68, 0.4)',
+                      }}
+                    >
+                      {isAll76Completed ? 'UNLOCKED' : `LOCKED · ${completedCount} / 76 COMPLETED`}
+                    </span>
+                  </div>
+                  <p style={{ margin: 0, fontSize: '0.8rem', color: '#cbd5e1' }}>
+                    {isAll76Completed
+                      ? 'All 76 NASA missions completed! You now have full clearance to launch all 4 Survival Missions.'
+                      : `Before all 76 NASA missions are completed, you cannot play these 4 Survival Missions (${Math.max(0, 76 - completedCount)} missions still incomplete).`}
+                  </p>
+                </div>
+
+                {!isAll76Completed && (
+                  <button
+                    onClick={() => {
+                      soundFx.playClick(750);
+                      setActiveTab('CATALOG');
+                    }}
+                    style={{
+                      padding: '8px 14px',
+                      background: 'linear-gradient(135deg, #0284c7, #0ea5e9)',
+                      border: 'none',
+                      borderRadius: '6px',
+                      color: '#f8fafc',
+                      fontWeight: 700,
+                      fontSize: '0.75rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    <Rocket size={13} />
+                    <span>Complete 76 NASA Missions First →</span>
+                  </button>
+                )}
+              </div>
+
+              {lockedSurvivalNotice && (
+                <div
+                  role="alert"
+                  style={{
+                    background: 'rgba(127, 29, 29, 0.4)',
+                    border: '1.5px solid #ef4444',
+                    borderRadius: '8px',
+                    padding: '12px 16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '12px',
+                    color: '#fecaca',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <AlertTriangle size={18} style={{ color: '#f87171', flexShrink: 0 }} />
+                    <span>{lockedSurvivalNotice}</span>
+                  </div>
+                  <button
+                    onClick={() => setLockedSurvivalNotice(null)}
+                    style={{
+                      background: 'transparent',
+                      border: '1px solid rgba(248, 113, 113, 0.4)',
+                      color: '#fca5a5',
+                      borderRadius: '4px',
+                      padding: '4px 8px',
+                      fontSize: '0.72rem',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              )}
+
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+                  gap: '14px',
+                }}
+              >
+                {NASA_SURVIVAL_DATA_PLAN.map((mission, idx) => {
+                  const simIds: HardcoreMissionId[] = [
+                    'suborbital-pioneer',
+                    'orbital-pioneer',
+                    'lunar-voyager',
+                    'mars-voyager',
+                  ];
+                  const mappedSimId = simIds[idx] || 'lunar-voyager';
+
+                  const handleAttemptPlay = () => {
+                    if (!isAll76Completed) {
+                      soundFx.playImpact();
+                      setLockedSurvivalNotice(
+                        `🔒 Access Denied for "${mission.title}": Before all 76 missions are completed, you cannot play this survival mission (${completedCount}/76 completed, ${Math.max(0, 76 - completedCount)} incomplete).`
+                      );
+                      return;
+                    }
+                    soundFx.playClick(850);
+                    setActiveSurvivalSimId(mappedSimId);
+                  };
+
+                  return (
+                    <div
+                      key={mission.id}
+                      style={{
+                        background: 'rgba(15, 23, 42, 0.85)',
+                        border: isAll76Completed
+                          ? '1px solid rgba(56, 189, 248, 0.35)'
+                          : '1px solid rgba(239, 68, 68, 0.3)',
+                        borderRadius: '10px',
+                        padding: '16px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        gap: '12px',
+                        opacity: isAll76Completed ? 1 : 0.9,
+                      }}
+                    >
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: '8px' }}>
+                          <span
+                            style={{
+                              fontSize: '0.68rem',
+                              fontWeight: 800,
+                              padding: '2px 8px',
+                              borderRadius: '4px',
+                              background: mission.targetBody === 'MOON' ? 'rgba(56, 189, 248, 0.15)' : 'rgba(249, 115, 22, 0.15)',
+                              color: mission.targetBody === 'MOON' ? '#38bdf8' : '#fb923c',
+                            }}
+                          >
+                            SURVIVAL #{idx + 1} · {mission.targetBody}
+                          </span>
+                          <span
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              fontSize: '0.68rem',
+                              fontWeight: 800,
+                              color: isAll76Completed ? '#34d399' : '#f87171',
+                            }}
+                          >
+                            <Lock size={12} />
+                            {isAll76Completed ? 'UNLOCKED' : 'LOCKED (76 REQ)'}
+                          </span>
+                        </div>
+
+                        <h4 style={{ margin: '0 0 6px 0', fontSize: '0.92rem', fontWeight: 800, color: '#f8fafc' }}>
+                          {mission.title}
+                        </h4>
+                        <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginBottom: '8px' }}>
+                          📍 {mission.targetSite} ({mission.coordinates})
+                        </div>
+                        <p style={{ margin: '0 0 10px 0', fontSize: '0.76rem', color: '#cbd5e1', lineHeight: 1.45 }}>
+                          {mission.environmentalTelemetry.primaryHazardValue} — {mission.survivalObjective}
+                        </p>
+                        <div
+                          style={{
+                            fontSize: '0.7rem',
+                            color: '#fda4af',
+                            background: 'rgba(127, 29, 29, 0.25)',
+                            border: '1px solid rgba(248, 113, 113, 0.25)',
+                            borderRadius: '6px',
+                            padding: '6px 8px',
+                          }}
+                        >
+                          ⚠️ Failure Risk: {mission.failureConsequence}
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={handleAttemptPlay}
+                        style={{
+                          marginTop: '4px',
+                          width: '100%',
+                          padding: '9px 12px',
+                          background: isAll76Completed
+                            ? 'linear-gradient(135deg, #10b981, #059669)'
+                            : 'rgba(239, 68, 68, 0.16)',
+                          border: isAll76Completed ? 'none' : '1px solid rgba(239, 68, 68, 0.45)',
+                          borderRadius: '6px',
+                          color: isAll76Completed ? '#020617' : '#fca5a5',
+                          fontWeight: 800,
+                          fontSize: '0.75rem',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px',
+                        }}
+                      >
+                        {isAll76Completed ? <Play size={13} fill="currentColor" /> : <Lock size={13} />}
+                        <span>
+                          {isAll76Completed
+                            ? 'Play Survival Mission 🚀'
+                            : 'Locked — Complete 76 Missions First'}
+                        </span>
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
 
@@ -968,6 +1270,13 @@ export const LearningHubModal: React.FC<LearningHubModalProps> = ({
           setIsComicModalOpen(true);
         }}
       />
+
+      {activeSurvivalSimId && (
+        <HardcoreSurvivalSimulator
+          initialMissionId={activeSurvivalSimId}
+          onClose={() => setActiveSurvivalSimId(null)}
+        />
+      )}
     </>
   );
 };

@@ -39,7 +39,9 @@ import {
   AlertTriangle,
   Gamepad2,
   FileText,
+  Lock,
 } from 'lucide-react';
+import { NASA_SURVIVAL_DATA_PLAN } from '../data/nasaSurvivalDataPlan';
 import { soundFx } from '../utils/audioEffects';
 import { getCadetProgression, recordLessonCompletion } from '../utils/simulationEngine';
 import {
@@ -503,6 +505,7 @@ export type AcademyUnifiedTab =
   | 'SPACE_ACADEMY'
   | 'ACADEMY_30_MISSIONS'
   | 'NASA_76_CAMPAIGN'
+  | 'SURVIVAL_4_MISSIONS'
   | 'VEHICLE_HANGAR';
 
 export interface AstronautAcademyModalProps {
@@ -542,6 +545,9 @@ export const AstronautAcademyModal: React.FC<AstronautAcademyModalProps> = ({
   const [selectedTrailerMission, setSelectedTrailerMission] = useState<NasaLevelMission | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleConfig>(NASA_VEHICLES[0]);
   const [isTrailerAudioMuted, setIsTrailerAudioMuted] = useState(false);
+  const [lockedSurvivalAlert, setLockedSurvivalAlert] = useState<string | null>(null);
+  const completedCount = completedMissions.length;
+  const isAll76Completed = completedCount >= 76;
 
   useEffect(() => {
     if (initialTab) {
@@ -906,6 +912,27 @@ export const AstronautAcademyModal: React.FC<AstronautAcademyModalProps> = ({
             >
               <Rocket size={13} />
               <span>76 NASA Campaign</span>
+            </button>
+
+            <button
+              onClick={() => { setActiveTab('SURVIVAL_4_MISSIONS'); soundFx.playClick(880); }}
+              style={{
+                padding: '6px 12px',
+                borderRadius: 0,
+                border: activeTab === 'SURVIVAL_4_MISSIONS' ? '1px solid #ef4444' : 'var(--rule-hair)',
+                backgroundColor: activeTab === 'SURVIVAL_4_MISSIONS' ? 'var(--color-paper-3)' : 'transparent',
+                color: activeTab === 'SURVIVAL_4_MISSIONS' ? '#f87171' : 'var(--color-muted)',
+                fontSize: '11px',
+                fontWeight: 700,
+                fontFamily: 'var(--font-mono)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                cursor: 'pointer',
+              }}
+            >
+              <Lock size={13} />
+              <span>4 Survival Missions</span>
             </button>
 
             <button
@@ -2709,12 +2736,15 @@ export const AstronautAcademyModal: React.FC<AstronautAcademyModalProps> = ({
                 })
                 .map((m) => {
                   const mapConfig = NASA_MAPS[m.mapId] || NASA_MAPS['map-moon-aitken'];
+                  const prevMission = m.missionNumber > 1 ? NASA_30_MISSIONS[m.missionNumber - 2] : null;
+                  const isDone = completedMissions.includes(m.id);
+                  const isUnlocked = m.missionNumber === 1 || isDone || Boolean(prevMission && completedMissions.includes(prevMission.id));
                   return (
                     <div
                       key={m.id}
                       style={{
                         background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(8, 14, 28, 0.96) 100%)',
-                        border: `1.5px solid ${mapConfig.accentColor}44`,
+                        border: `1.5px solid ${isUnlocked ? mapConfig.accentColor + '44' : 'rgba(100,116,139,0.3)'}`,
                         borderRadius: '14px',
                         padding: '16px',
                         display: 'flex',
@@ -2723,6 +2753,7 @@ export const AstronautAcademyModal: React.FC<AstronautAcademyModalProps> = ({
                         gap: '12px',
                         boxShadow: '0 6px 20px rgba(0,0,0,0.5)',
                         transition: 'all 0.2s ease',
+                        opacity: isUnlocked ? 1 : 0.65,
                       }}
                     >
                       <div>
@@ -2730,8 +2761,8 @@ export const AstronautAcademyModal: React.FC<AstronautAcademyModalProps> = ({
                           <span style={{ fontSize: '10px', fontWeight: 900, background: 'rgba(56, 189, 248, 0.15)', border: '1px solid #38bdf8', color: '#38bdf8', padding: '2px 8px', borderRadius: '10px' }}>
                             #{m.missionNumber.toString().padStart(2, '0')} · {m.tier} LEVEL
                           </span>
-                          <span style={{ fontSize: '10px', color: mapConfig.accentColor, fontWeight: 800 }}>
-                            {mapConfig.badge}
+                          <span style={{ fontSize: '10px', color: isUnlocked ? mapConfig.accentColor : '#94a3b8', fontWeight: 800 }}>
+                            {isUnlocked ? mapConfig.badge : '🔒 LOCKED'}
                           </span>
                         </div>
 
@@ -2753,30 +2784,43 @@ export const AstronautAcademyModal: React.FC<AstronautAcademyModalProps> = ({
                         </div>
 
                         <button
+                          disabled={!isUnlocked}
                           onClick={() => {
-                            setSelectedTrailerMission(m);
+                            if (!isUnlocked) return;
+                            if (onLaunchMission) {
+                              if (!isFullPage) onClose();
+                              onLaunchMission(m.id);
+                            } else {
+                              setSelectedTrailerMission(m);
+                            }
                             soundFx.playReactorStart();
                           }}
                           style={{
                             width: '100%',
                             padding: '10px 14px',
                             borderRadius: '10px',
-                            background: 'linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #7c3aed 100%)',
-                            border: '1.5px solid #38bdf8',
-                            color: '#ffffff',
+                            background: isUnlocked
+                              ? 'linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #7c3aed 100%)'
+                              : 'rgba(30, 41, 59, 0.7)',
+                            border: isUnlocked ? '1.5px solid #38bdf8' : '1px solid rgba(100,116,139,0.4)',
+                            color: isUnlocked ? '#ffffff' : '#94a3b8',
                             fontSize: '11.5px',
                             fontWeight: 900,
-                            cursor: 'pointer',
+                            cursor: isUnlocked ? 'pointer' : 'not-allowed',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: '8px',
-                            boxShadow: '0 0 16px rgba(56, 189, 248, 0.4)',
+                            boxShadow: isUnlocked ? '0 0 16px rgba(56, 189, 248, 0.4)' : 'none',
                             letterSpacing: '0.03em',
                           }}
                         >
-                          <Film size={14} />
-                          <span>🎬 3D TRAILER ➔ 🚀 FLIGHT SIMULATOR</span>
+                          {isUnlocked ? <Play size={14} fill="currentColor" /> : <Lock size={14} />}
+                          <span>
+                            {isUnlocked
+                              ? (isDone ? 'REPLAY FLIGHT SIMULATOR ★' : '🚀 LAUNCH FLIGHT SIMULATOR')
+                              : `LOCKED — BEAT MISSION #${m.missionNumber - 1} FIRST`}
+                          </span>
                         </button>
                       </div>
                     </div>
@@ -2792,12 +2836,173 @@ export const AstronautAcademyModal: React.FC<AstronautAcademyModalProps> = ({
             <MissionCampaignMap
               completedMissions={completedMissions}
               onLaunchMission={(missionId) => {
-                onClose();
+                if (!isFullPage) onClose();
                 if (onLaunchMission) {
                   onLaunchMission(missionId);
                 }
               }}
             />
+          </div>
+        )}
+
+        {/* ── TAB 7B: 4 SURVIVAL MISSIONS (LOCKED UNTIL 76 COMPLETED) ── */}
+        {activeTab === 'SURVIVAL_4_MISSIONS' && (
+          <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: '16px', backgroundColor: '#070b13' }}>
+            <div
+              style={{
+                background: 'linear-gradient(135deg, rgba(127, 29, 29, 0.28), rgba(15, 23, 42, 0.96))',
+                border: isAll76Completed ? '1.5px solid rgba(16, 185, 129, 0.45)' : '1.5px solid rgba(239, 68, 68, 0.45)',
+                borderRadius: '14px',
+                padding: '18px 22px',
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '12px',
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <Lock size={16} style={{ color: isAll76Completed ? '#10b981' : '#f87171' }} />
+                  <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 900, color: '#f8fafc' }}>
+                    4 Extreme Planetary Survival Missions
+                  </h3>
+                </div>
+                <p style={{ margin: 0, fontSize: '12.5px', color: '#cbd5e1' }}>
+                  {isAll76Completed
+                    ? 'All 76 NASA missions completed! Full clearance granted for all 4 Survival Missions.'
+                    : `Before all 76 missions are completed, you cannot play these 4 Survival Missions (${completedCount}/76 completed — ${Math.max(0, 76 - completedCount)} incomplete).`}
+                </p>
+              </div>
+              {!isAll76Completed && (
+                <button
+                  onClick={() => {
+                    soundFx.playClick(900);
+                    setActiveTab('NASA_76_CAMPAIGN');
+                  }}
+                  style={{
+                    padding: '8px 14px',
+                    background: 'linear-gradient(135deg, #0284c7, #0ea5e9)',
+                    border: 'none',
+                    borderRadius: '6px',
+                    color: '#f8fafc',
+                    fontWeight: 700,
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Open 76 NASA Missions →
+                </button>
+              )}
+            </div>
+
+            {lockedSurvivalAlert && (
+              <div
+                role="alert"
+                style={{
+                  background: 'rgba(127, 29, 29, 0.45)',
+                  border: '1.5px solid #ef4444',
+                  borderRadius: '8px',
+                  padding: '12px 16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '12px',
+                  color: '#fecaca',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <AlertTriangle size={16} style={{ color: '#f87171', flexShrink: 0 }} />
+                  <span>{lockedSurvivalAlert}</span>
+                </div>
+                <button
+                  onClick={() => setLockedSurvivalAlert(null)}
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid rgba(248, 113, 113, 0.4)',
+                    color: '#fca5a5',
+                    borderRadius: '4px',
+                    padding: '3px 8px',
+                    fontSize: '11px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
+              {NASA_SURVIVAL_DATA_PLAN.map((mission, idx) => (
+                <div
+                  key={mission.id}
+                  style={{
+                    background: 'rgba(15, 23, 42, 0.9)',
+                    border: isAll76Completed ? '1px solid rgba(56, 189, 248, 0.35)' : '1px solid rgba(239, 68, 68, 0.35)',
+                    borderRadius: '12px',
+                    padding: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    gap: '12px',
+                  }}
+                >
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 800, color: mission.targetBody === 'MOON' ? '#38bdf8' : '#fb923c' }}>
+                        SURVIVAL #{idx + 1} · {mission.targetBody}
+                      </span>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '11px', fontWeight: 800, color: isAll76Completed ? '#34d399' : '#f87171' }}>
+                        <Lock size={12} />
+                        {isAll76Completed ? 'UNLOCKED' : 'LOCKED'}
+                      </span>
+                    </div>
+                    <h4 style={{ margin: '0 0 6px 0', fontSize: '14.5px', fontWeight: 800, color: '#f8fafc' }}>
+                      {mission.title}
+                    </h4>
+                    <p style={{ margin: 0, fontSize: '12px', color: '#cbd5e1', lineHeight: 1.45 }}>
+                      {mission.environmentalTelemetry.primaryHazardValue} — {mission.survivalObjective}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      if (!isAll76Completed) {
+                        soundFx.playImpact();
+                        setLockedSurvivalAlert(
+                          `🔒 Locked: Before all 76 missions are completed, you cannot play "${mission.title}" (${completedCount}/76 completed, ${Math.max(0, 76 - completedCount)} incomplete).`
+                        );
+                        return;
+                      }
+                      if (onLaunchMission) {
+                        if (!isFullPage) onClose();
+                        onLaunchMission(mission.id);
+                      }
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '9px 12px',
+                      background: isAll76Completed ? 'linear-gradient(135deg, #10b981, #059669)' : 'rgba(239, 68, 68, 0.16)',
+                      border: isAll76Completed ? 'none' : '1px solid rgba(239, 68, 68, 0.45)',
+                      borderRadius: '6px',
+                      color: isAll76Completed ? '#020617' : '#fca5a5',
+                      fontWeight: 800,
+                      fontSize: '12px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    <Lock size={13} />
+                    <span>{isAll76Completed ? 'Play Survival Mission 🚀' : 'Locked — Complete 76 Missions First'}</span>
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
@@ -2904,7 +3109,7 @@ export const AstronautAcademyModal: React.FC<AstronautAcademyModalProps> = ({
               onLaunchGame={() => {
                 const missionId = selectedTrailerMission.id;
                 setSelectedTrailerMission(null);
-                onClose();
+                if (!isFullPage) onClose();
                 if (onLaunchMission) {
                   onLaunchMission(missionId);
                 }

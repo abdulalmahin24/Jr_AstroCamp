@@ -61,7 +61,7 @@ export const MissionGameModal: React.FC<MissionGameModalProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const phaserGameRef = useRef<any>(null);
 
-  const [missionState, setMissionState] = useState<'trailer' | 'briefing' | 'playing' | 'success' | 'failure'>('trailer');
+  const [missionState, setMissionState] = useState<'trailer' | 'briefing' | 'playing' | 'success' | 'failure'>('playing');
   const [engineMode, setEngineMode] = useState<'3d' | '2d'>('3d');
   const [score, setScore] = useState<number>(0);
   const [failureReason, setFailureReason] = useState<string>('');
@@ -82,12 +82,12 @@ export const MissionGameModal: React.FC<MissionGameModalProps> = ({
 
   const isAlreadyCompleted = completedMissions.includes(mission.id);
 
-  // When a new mission is selected, start with the 3D cinematic trailer
+  // When a new mission is selected, launch directly into the 3D flight simulator game
   useEffect(() => {
     setAttemptKey((prev) => prev + 1);
     setScore(0);
     setFailureReason('');
-    setMissionState('trailer');
+    setMissionState('playing');
   }, [missionId]);
 
   // Clean up Phaser on unmount
@@ -141,7 +141,7 @@ export const MissionGameModal: React.FC<MissionGameModalProps> = ({
         destroyPhaserGame(phaserGameRef.current);
         phaserGameRef.current = null;
       }
-      setMissionState('briefing');
+      setMissionState('playing');
       onSelectNextMission(nextMission.id);
     }
   };

@@ -3,12 +3,13 @@
 /* Hallmark · pre-emit critique: P9 H9 E9 S9 R9 V9 · weakest: none, locked to DESIGN.md aerospace workbench */
 
 html {
-  overflow-x: clip;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
 body {
-  overflow-x: clip;
+  overflow-x: hidden;
+  overflow-y: auto;
   margin: 0;
   padding: 0;
   background-color: var(--color-paper);

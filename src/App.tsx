@@ -227,6 +227,13 @@ export const App: React.FC = () => {
     setIsCharacterModalOpen(false);
     setIsLiveActivityModalOpen(false);
     setIsPlanetaryMapOpen(false);
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = '';
+      document.body.classList.remove('mobile-menu-open');
+    }
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
   }, [route]);
 
   // Auto-open Multiplayer Lobby if URL has ?room= or ?coop=true
@@ -764,8 +771,8 @@ export const App: React.FC = () => {
       className="app-root-shell"
       style={{
         minHeight: '100vh',
-        height: route === 'home' || route === 'mission' ? '100vh' : 'auto',
-        overflow: route === 'home' || route === 'mission' ? 'hidden' : 'visible',
+        height: route === 'explore' ? '100vh' : 'auto',
+        overflow: route === 'explore' ? 'hidden' : 'visible',
         background: 'var(--color-space-950, #04070e)',
         display: 'flex',
         flexDirection: 'column',
